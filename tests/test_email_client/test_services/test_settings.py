@@ -43,6 +43,6 @@ class SettingsServiceTestCase(TestCase):
 
         await service.update_custom_headers({"from": "admin <admin1@co.co"})
 
-        self.settings_storage.save_customer_headers.assert_awaited_once_with(
+        self.settings_storage.save_custom_headers.assert_awaited_once_with(
             {"from": "admin <admin1@co.co"}
         )

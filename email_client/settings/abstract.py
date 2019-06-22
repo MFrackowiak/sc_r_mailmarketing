@@ -4,7 +4,7 @@ from typing import Tuple, Dict
 
 class AbstractSettingsStorage(ABC):
     @abstractmethod
-    async def save_customer_headers(self, headers: Dict):
+    async def save_custom_headers(self, headers: Dict):
         pass
 
     @abstractmethod

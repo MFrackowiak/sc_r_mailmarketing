@@ -18,7 +18,7 @@ class SettingsService(AbstractSettingsService):
         await self._storage.save_gateway_credentials(user, password)
 
     async def update_custom_headers(self, headers: Dict):
-        await self._storage.save_customer_headers(headers)
+        await self._storage.save_custom_headers(headers)
 
     async def update_email_from(self, name: str, email: str):
         await self._storage.save_email_from(name, email)
