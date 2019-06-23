@@ -1,12 +1,8 @@
 from asynctest import TestCase, Mock, CoroutineMock
 from voluptuous import Coerce, Email, Schema
 
-from common.decorators import (
-    validate,
-    ValidationError,
-    UnsupportedFormatError,
-    handle_errors,
-)
+from common.decorators import validate_json, handle_errors
+from common.exceptions import ValidationError, UnsupportedFormatError
 
 
 class TestValidateDecoratorTestCase(TestCase):
@@ -27,7 +23,7 @@ class TestValidateDecoratorTestCase(TestCase):
             b'{"job_id": 12, "email": "random@guy.co", "template": "Hello!"}'
         )
 
-        validate(self.dummy_func)(self.self_dummy)
+        validate_json(self.dummy_func)(self.self_dummy)
 
         self.dummy_func.assert_called_once_with(
             self.self_dummy,
@@ -41,7 +37,7 @@ class TestValidateDecoratorTestCase(TestCase):
         )
 
         with self.assertRaises(ValidationError):
-            validate(self.dummy_func)(self.self_dummy)
+            validate_json(self.dummy_func)(self.self_dummy)
 
         self.dummy_func.assert_not_called()
 
@@ -52,7 +48,7 @@ class TestValidateDecoratorTestCase(TestCase):
         )
 
         with self.assertRaises(ValidationError):
-            validate(self.dummy_func)(self.self_dummy)
+            validate_json(self.dummy_func)(self.self_dummy)
 
         self.dummy_func.assert_not_called()
 
@@ -61,7 +57,7 @@ class TestValidateDecoratorTestCase(TestCase):
         self.self_dummy.request.body = b"Hello"
 
         with self.assertRaises(UnsupportedFormatError):
-            validate(self.dummy_func)(self.self_dummy)
+            validate_json(self.dummy_func)(self.self_dummy)
 
         self.dummy_func.assert_not_called()
 

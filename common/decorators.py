@@ -8,18 +8,16 @@ from typing import Callable
 from tornado import escape
 from voluptuous import Invalid
 
+from common.exceptions import (
+    UnsupportedFormatError,
+    ValidationError,
+    UnavailableServiceError,
+)
+
 logger = getLogger(__name__)
 
 
-class ValidationError(Exception):
-    pass
-
-
-class UnsupportedFormatError(Exception):
-    pass
-
-
-def validate(func: Callable):
+def validate_json(func: Callable):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         try:
@@ -37,6 +35,19 @@ def validate(func: Callable):
         except (TypeError, JSONDecodeError) as e:
             raise UnsupportedFormatError(repr(e))
         return func(self, validated_data, *args, **kwargs)
+
+    return wrapper
+
+
+def catch_timeout(func: Callable):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        try:
+            return func(self, *args, **kwargs)
+        except TimeoutError:
+            return UnavailableServiceError(
+                "Couldn't finish operation - connection timed out."
+            )
 
     return wrapper
 

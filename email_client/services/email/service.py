@@ -1,10 +1,8 @@
 from asyncio import ensure_future, gather, sleep
 from typing import List, Dict, Generator, Optional, Tuple
 
-from email_client.integrations.email.abstract import (
-    AbstractEmailGatewayClient,
-    EmailResult,
-)
+from common.enums import EmailResult
+from email_client.integrations.email.abstract import AbstractEmailGatewayClient
 from email_client.integrations.web.abstract import AbstractWebClient
 from email_client.services.email.abstract import AbstractSendEmailService
 from email_client.settings.abstract import AbstractSettingsStorage
@@ -28,11 +26,11 @@ class SendEmailService(AbstractSendEmailService):
         self._retry_count = retry_count
         self._retry_backoff = retry_backoff
 
-    def dispatch_sending_emails(self, jobs: List[Dict], template: str):
-        ensure_future(self.send_emails(jobs, template))
+    def dispatch_sending_emails(self, jobs: List[Dict], template: str, subject: str):
+        ensure_future(self.send_emails(jobs, template, subject))
 
     async def send_emails(
-        self, jobs: List[Dict], template: str, retry_attempt: int = 0
+        self, jobs: List[Dict], template: str, subject: str, retry_attempt: int = 0
     ):
         auth, headers, email_from = (
             await self._settings_storage.get_gateway_credentials_headers_and_from()
@@ -40,7 +38,7 @@ class SendEmailService(AbstractSendEmailService):
         to_retry = []
 
         batches = [
-            self.send_email_batch(batch, template, auth, headers, email_from)
+            self.send_email_batch(batch, template, subject, auth, headers, email_from)
             for batch in self._split_to_batches(jobs, self._batch_size)
         ]
 
@@ -50,27 +48,32 @@ class SendEmailService(AbstractSendEmailService):
             to_retry.extend(retry)
 
         if to_retry:
-            ensure_future(self.manage_retry(to_retry, template, retry_attempt + 1))
+            ensure_future(
+                self.manage_retry(to_retry, template, subject, retry_attempt + 1)
+            )
 
-    async def manage_retry(self, jobs: List[Dict], template: str, retry_attempt: int):
+    async def manage_retry(
+        self, jobs: List[Dict], template: str, subject: str, retry_attempt: int
+    ):
         if retry_attempt > self._retry_count:
             await self._web_client.report_job_status(
                 {EmailResult.FAILURE: [job["id"] for job in jobs]}
             )
         else:
             await sleep(self._retry_backoff ** retry_attempt)
-            await self.send_emails(jobs, template, retry_attempt)
+            await self.send_emails(jobs, template, subject, retry_attempt)
 
     async def send_email_batch(
         self,
         jobs_batch: List[Dict],
         template: str,
+        subject: str,
         auth: Tuple[str, str],
         headers: Optional[Dict],
         email_from: Dict[str, str],
     ) -> List[Dict]:
         results, failed = await self._email_client.send_emails(
-            jobs_batch, template, auth, email_from, headers
+            jobs_batch, template, subject, auth, email_from, headers
         )
 
         await self._web_client.report_job_status(results)

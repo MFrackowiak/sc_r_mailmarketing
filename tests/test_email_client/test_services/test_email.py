@@ -8,10 +8,8 @@ from asynctest import (
     Mock,
 )
 
-from email_client.integrations.email.abstract import (
-    AbstractEmailGatewayClient,
-    EmailResult,
-)
+from common.enums import EmailResult
+from email_client.integrations.email.abstract import AbstractEmailGatewayClient
 from email_client.integrations.web.abstract import AbstractWebClient
 from email_client.services.email.service import SendEmailService
 from email_client.settings.abstract import AbstractSettingsStorage
@@ -43,6 +41,7 @@ class SendEmailServiceTestCase(TestCase):
                     for i in range(1, 6)
                 ],
                 "Hi {name}! Have a nice day",
+                "Subject",
             )
             send_emails.assert_called_once_with(
                 [
@@ -50,6 +49,7 @@ class SendEmailServiceTestCase(TestCase):
                     for i in range(1, 6)
                 ],
                 "Hi {name}! Have a nice day",
+                "Subject",
             )
             self.ensure_future_mock.assert_called_once_with(send_emails.return_value)
 
@@ -75,6 +75,7 @@ class SendEmailServiceTestCase(TestCase):
                     for i in range(1, 6)
                 ],
                 "Hi {name}! Have a nice day",
+                "Subject",
             )
 
         self.settings_storage.get_gateway_credentials_headers_and_from.assert_awaited_once()
@@ -86,6 +87,7 @@ class SendEmailServiceTestCase(TestCase):
                         {"id": 2, "email": "guy_2@co.co", "name": "Guy"},
                     ],
                     "Hi {name}! Have a nice day",
+                    "Subject",
                     *params,
                 ),
                 call(
@@ -94,11 +96,13 @@ class SendEmailServiceTestCase(TestCase):
                         {"id": 4, "email": "guy_4@co.co", "name": "Guy"},
                     ],
                     "Hi {name}! Have a nice day",
+                    "Subject",
                     *params,
                 ),
                 call(
                     [{"id": 5, "email": "guy_5@co.co", "name": "Guy"}],
                     "Hi {name}! Have a nice day",
+                    "Subject",
                     *params,
                 ),
             ]
@@ -139,6 +143,7 @@ class SendEmailServiceTestCase(TestCase):
                     for i in range(1, 6)
                 ],
                 "Hi {name}! Have a nice day",
+                "Hello!",
             )
 
         self.settings_storage.get_gateway_credentials_headers_and_from.assert_awaited_once()
@@ -150,6 +155,7 @@ class SendEmailServiceTestCase(TestCase):
                         {"id": 2, "email": "guy_2@co.co", "name": "Guy"},
                     ],
                     "Hi {name}! Have a nice day",
+                    "Hello!",
                     *params,
                 ),
                 call(
@@ -158,11 +164,13 @@ class SendEmailServiceTestCase(TestCase):
                         {"id": 4, "email": "guy_4@co.co", "name": "Guy"},
                     ],
                     "Hi {name}! Have a nice day",
+                    "Hello!",
                     *params,
                 ),
                 call(
                     [{"id": 5, "email": "guy_5@co.co", "name": "Guy"}],
                     "Hi {name}! Have a nice day",
+                    "Hello!",
                     *params,
                 ),
             ]
@@ -173,6 +181,7 @@ class SendEmailServiceTestCase(TestCase):
                 {"id": 4, "email": "guy_4@co.co", "name": "Guy"},
             ],
             "Hi {name}! Have a nice day",
+            "Hello!",
             1,
         )
         self.ensure_future_mock.assert_called_once_with(manage_retry_mock.return_value)
@@ -192,6 +201,7 @@ class SendEmailServiceTestCase(TestCase):
                     {"id": 4, "email": "guy_4@co.co", "name": "Guy"},
                 ],
                 "Hi {name}! Have a nice day",
+                "Subject",
                 3,
             )
 
@@ -202,6 +212,7 @@ class SendEmailServiceTestCase(TestCase):
                 {"id": 4, "email": "guy_4@co.co", "name": "Guy"},
             ],
             "Hi {name}! Have a nice day",
+            "Subject",
             3,
         )
 
@@ -220,6 +231,7 @@ class SendEmailServiceTestCase(TestCase):
                     {"id": 4, "email": "guy_4@co.co", "name": "Guy"},
                 ],
                 "Hi {name}! Have a nice day",
+                "Subject",
                 4,
             )
 
@@ -246,6 +258,7 @@ class SendEmailServiceTestCase(TestCase):
                     for i in range(1, 5)
                 ],
                 "Hi {name}! Have a nice day",
+                "Subject",
                 ("user", "pass"),
                 {"reply-to": "spam@co.co"},
                 {"name": "Admin", "email": "admin@co.co"},
@@ -256,6 +269,7 @@ class SendEmailServiceTestCase(TestCase):
         self.email_client.send_emails.assert_awaited_once_with(
             [{"id": i, "email": f"guy_{i}@co.co", "name": "Guy"} for i in range(1, 5)],
             "Hi {name}! Have a nice day",
+            "Subject",
             ("user", "pass"),
             {"name": "Admin", "email": "admin@co.co"},
             {"reply-to": "spam@co.co"},

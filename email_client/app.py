@@ -31,26 +31,31 @@ async def initialize_services(config: Dict):
     web_session = initialize_web_session(config["sessions"]["web"])
     email_session = initialize_email_gateway_session(config["sessions"]["email"])
 
-    web_client = WebClient(config["web"]["url"], web_session,
-                           config["web"]["retry_count"], config["web"]["retry_backoff"])
-    email_client = FlypsGatewayClient(
-        config["email"]["url"], email_session,
+    web_client = WebClient(
+        config["web"]["url"],
+        web_session,
+        config["web"]["retry_count"],
+        config["web"]["retry_backoff"],
     )
+    email_client = FlypsGatewayClient(config["email"]["url"], email_session)
 
     settings_storage = SimpleRedisSettingsStorage(redis)
 
-    email_service = SendEmailService(web_client, email_client, settings_storage,
-                                     config["service"]["email"]["batch_size"],
-                                     config["service"]["email"]["retry_count"],
-                                     config["service"]["email"]["retry_backoff"])
+    email_service = SendEmailService(
+        web_client,
+        email_client,
+        settings_storage,
+        config["service"]["email"]["batch_size"],
+        config["service"]["email"]["retry_count"],
+        config["service"]["email"]["retry_backoff"],
+    )
     settings_service = SettingsService(settings_storage)
 
     return email_service, settings_service
 
 
 def make_app(
-        settings_service: AbstractSettingsService,
-        email_service: AbstractSendEmailService
+    settings_service: AbstractSettingsService, email_service: AbstractSendEmailService
 ):
     return Application(
         [

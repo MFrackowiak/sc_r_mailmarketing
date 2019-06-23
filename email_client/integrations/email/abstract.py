@@ -1,13 +1,5 @@
 from abc import ABC, abstractmethod
-from enum import Enum
 from typing import Dict, List, Tuple, Optional
-
-
-class EmailResult(Enum):
-    SUCCESS = "success"
-    AUTH_FAILURE = "auth_failure"
-    FAILURE = "failure"
-    RECOVERABLE_FAILURE = "retry"
 
 
 class AbstractEmailGatewayClient(ABC):
@@ -16,6 +8,7 @@ class AbstractEmailGatewayClient(ABC):
         self,
         jobs: List[Dict],
         template: str,
+        subject: str,
         auth: Tuple[str, str],
         email_from: Dict[str, str],
         headers: Optional[Dict] = None,

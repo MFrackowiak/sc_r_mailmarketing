@@ -1,6 +1,6 @@
 from asynctest import TestCase, Mock, CoroutineMock, patch, call
 
-from email_client.integrations.email.abstract import EmailResult
+from common.enums import EmailResult
 from email_client.integrations.web.client import WebClient
 
 

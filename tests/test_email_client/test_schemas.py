@@ -29,10 +29,11 @@ class EmailClientSchemasTestCase(TestCase):
     def test_job_request_schema(self):
         test_dict = {
             "jobs": [
-                {"id": 13, "subject": "None", "email": "guy@co.co"},
-                {"id": 14, "subject": "None", "email": "other@co.co"},
+                {"id": 13, "email": "guy@co.co"},
+                {"id": 14, "email": "other@co.co"},
             ],
             "template": "Hello!",
+            "subject": "None",
         }
         self.assertEqual(job_request_schema(test_dict), test_dict)
 

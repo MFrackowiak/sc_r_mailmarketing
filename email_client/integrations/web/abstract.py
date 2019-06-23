@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict
 
-from email_client.integrations.email.abstract import EmailResult
+from common.enums import EmailResult
 
 
 class AbstractWebClient(ABC):

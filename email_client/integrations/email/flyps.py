@@ -6,10 +6,8 @@ from typing import List, Dict, Optional, Tuple
 
 from aiohttp import ClientSession
 
-from email_client.integrations.email.abstract import (
-    AbstractEmailGatewayClient,
-    EmailResult,
-)
+from common.enums import EmailResult
+from email_client.integrations.email.abstract import AbstractEmailGatewayClient
 
 
 logger = getLogger(__name__)
@@ -24,13 +22,16 @@ class FlypsGatewayClient(AbstractEmailGatewayClient):
         self,
         jobs: List[Dict],
         template: str,
+        subject: str,
         auth: Tuple[str, str],
         email_from: Dict[str, str],
         headers: Optional[Dict] = None,
     ) -> Tuple[Dict, List[Dict]]:
         results = await gather(
             *[
-                self._send_email(job, template, auth, email_from, headers or {})
+                self._send_email(
+                    job, template, subject, auth, email_from, headers or {}
+                )
                 for job in jobs
             ]
         )
@@ -53,6 +54,7 @@ class FlypsGatewayClient(AbstractEmailGatewayClient):
         self,
         job: Dict,
         template: str,
+        subject: str,
         auth: Tuple[str, str],
         email_from: Dict[str, str],
         headers: Dict,
@@ -66,7 +68,7 @@ class FlypsGatewayClient(AbstractEmailGatewayClient):
                         "name": job.get("name", job["email"]),
                         "email": job["email"],
                     },
-                    "subject": job["subject"],
+                    "subject": subject,
                     "text": self.render_template(job, template),
                     "headers": headers,
                 },

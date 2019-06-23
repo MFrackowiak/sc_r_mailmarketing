@@ -1,15 +1,6 @@
-from aiohttp import ClientSession
-from asynctest import (
-    TestCase,
-    create_autospec,
-    CoroutineMock,
-    patch,
-    call,
-    Mock,
-    MagicMock,
-)
+from asynctest import TestCase, CoroutineMock, patch, call, Mock, MagicMock
 
-from email_client.integrations.email.abstract import EmailResult
+from common.enums import EmailResult
 from email_client.integrations.email.flyps import FlypsGatewayClient
 
 
@@ -46,10 +37,11 @@ class FlypsGatewayClientTestCase(TestCase):
         headers = {"reply-to": "admin <admin@test.co>"}
         email_from = {"name": "Admin", "email": "admin@co.oc"}
         template = "Hi! This is an email."
+        subject = "Subject"
 
         with send_email_patch:
             results, retry = await client.send_emails(
-                jobs, template, auth, email_from, headers
+                jobs, template, subject, auth, email_from, headers
             )
 
         self.assertEqual(
@@ -74,12 +66,13 @@ class FlypsGatewayClientTestCase(TestCase):
             retry, [{"id": 136, "email": "test_5@te.st", "first_name": "Frida"}]
         )
         send_email_mock.assert_has_awaits(
-            [call(job, template, auth, email_from, headers) for job in jobs]
+            [call(job, template, subject, auth, email_from, headers) for job in jobs]
         )
 
     async def test_send_email_202(self):
         job = {"id": 14573, "name": "User", "email": "user@co.co", "subject": "Hello!"}
         template = "Hello {name}! Welcome in our subscription."
+        subject = "Subject"
         self.session.post.return_value = Mock(
             status=202,
             json=CoroutineMock(
@@ -93,6 +86,7 @@ class FlypsGatewayClientTestCase(TestCase):
         result, message_id = await client._send_email(
             job,
             template,
+            subject,
             ("user", "admin1"),
             {"email": "admin@co.co", "name": "Admin"},
             {},
@@ -108,7 +102,7 @@ class FlypsGatewayClientTestCase(TestCase):
             json={
                 "from": {"email": "admin@co.co", "name": "Admin"},
                 "to": {"name": "User", "email": "user@co.co"},
-                "subject": "Hello!",
+                "subject": "Subject",
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
@@ -124,6 +118,7 @@ class FlypsGatewayClientTestCase(TestCase):
         result, message_id = await client._send_email(
             job,
             template,
+            "Subject",
             ("user", "admin1"),
             {"email": "admin@co.co", "name": "Admin"},
             {},
@@ -137,7 +132,7 @@ class FlypsGatewayClientTestCase(TestCase):
             json={
                 "from": {"email": "admin@co.co", "name": "Admin"},
                 "to": {"name": "User", "email": "user@co.co"},
-                "subject": "Hello!",
+                "subject": "Subject",
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
@@ -153,6 +148,7 @@ class FlypsGatewayClientTestCase(TestCase):
         result, message_id = await client._send_email(
             job,
             template,
+            "Subject",
             ("user", "admin1"),
             {"email": "admin@co.co", "name": "Admin"},
             {},
@@ -166,7 +162,7 @@ class FlypsGatewayClientTestCase(TestCase):
             json={
                 "from": {"email": "admin@co.co", "name": "Admin"},
                 "to": {"name": "User", "email": "user@co.co"},
-                "subject": "Hello!",
+                "subject": "Subject",
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
@@ -182,6 +178,7 @@ class FlypsGatewayClientTestCase(TestCase):
         result, message_id = await client._send_email(
             job,
             template,
+            "Subject",
             ("user", "admin1"),
             {"email": "admin@co.co", "name": "Admin"},
             {},
@@ -195,7 +192,7 @@ class FlypsGatewayClientTestCase(TestCase):
             json={
                 "from": {"email": "admin@co.co", "name": "Admin"},
                 "to": {"name": "User", "email": "user@co.co"},
-                "subject": "Hello!",
+                "subject": "Subject",
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
@@ -212,6 +209,7 @@ class FlypsGatewayClientTestCase(TestCase):
         result, message_id = await client._send_email(
             job,
             template,
+            "Subject",
             ("user", "admin1"),
             {"email": "admin@co.co", "name": "Admin"},
             {},
@@ -226,7 +224,7 @@ class FlypsGatewayClientTestCase(TestCase):
             json={
                 "from": {"email": "admin@co.co", "name": "Admin"},
                 "to": {"name": "User", "email": "user@co.co"},
-                "subject": "Hello!",
+                "subject": "Subject",
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
@@ -243,6 +241,7 @@ class FlypsGatewayClientTestCase(TestCase):
         result, message_id = await client._send_email(
             job,
             template,
+            "Subject",
             ("user", "admin1"),
             {"email": "admin@co.co", "name": "Admin"},
             {},
@@ -257,7 +256,7 @@ class FlypsGatewayClientTestCase(TestCase):
             json={
                 "from": {"email": "admin@co.co", "name": "Admin"},
                 "to": {"name": "User", "email": "user@co.co"},
-                "subject": "Hello!",
+                "subject": "Subject",
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },

@@ -3,7 +3,7 @@ from typing import Dict
 
 from tornado.web import RequestHandler
 
-from common.decorators import handle_errors, validate
+from common.decorators import handle_errors, validate_json
 from email_client.schemas import settings_schema
 from email_client.services.settings.abstract import AbstractSettingsService
 
@@ -21,7 +21,7 @@ class SettingsHandler(RequestHandler):
         self.write(data)
 
     @handle_errors
-    @validate
+    @validate_json
     async def patch(self, data: Dict):
         if "auth" in data:
             await self.service.update_email_credentials(**data["auth"])

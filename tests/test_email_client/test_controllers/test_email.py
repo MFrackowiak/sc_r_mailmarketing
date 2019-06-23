@@ -25,10 +25,11 @@ class TestEmailHandler(AsyncHTTPTestCase):
             body=json.dumps(
                 {
                     "jobs": [
-                        {"id": 13, "subject": "None", "email": "guy@co.co"},
-                        {"id": 14, "subject": "None", "email": "other@co.co"},
+                        {"id": 13, "email": "guy@co.co"},
+                        {"id": 14, "email": "other@co.co"},
                     ],
                     "template": "Hello!",
+                    "subject": "Hi!",
                 }
             ),
         )
@@ -37,9 +38,7 @@ class TestEmailHandler(AsyncHTTPTestCase):
             self.email_service.send_emails.return_value
         )
         self.email_service.send_emails.assert_called_once_with(
-            jobs=[
-                {"id": 13, "subject": "None", "email": "guy@co.co"},
-                {"id": 14, "subject": "None", "email": "other@co.co"},
-            ],
+            jobs=[{"id": 13, "email": "guy@co.co"}, {"id": 14, "email": "other@co.co"}],
             template="Hello!",
+            subject="Hi!",
         )

@@ -4,11 +4,13 @@ from typing import Dict, List, Generator, Tuple, Optional
 
 class AbstractSendEmailService(ABC):
     @abstractmethod
-    def dispatch_sending_emails(self, jobs: List[Dict], template: str):
+    def dispatch_sending_emails(self, jobs: List[Dict], template: str, subject: str):
         pass
 
     @abstractmethod
-    def send_emails(self, jobs: List[Dict], template: str, retry_attempt: int = 0):
+    def send_emails(
+        self, jobs: List[Dict], subject: str, template: str, retry_attempt: int = 0
+    ):
         pass
 
     @abstractmethod
@@ -16,6 +18,7 @@ class AbstractSendEmailService(ABC):
         self,
         jobs_batch: List[Dict],
         template: str,
+        subject: str,
         auth: Tuple[str, str],
         headers: Optional[Dict],
         email_from: Dict[str, str],
@@ -29,5 +32,7 @@ class AbstractSendEmailService(ABC):
         pass
 
     @abstractmethod
-    async def manage_retry(self, jobs: List[Dict], template: str, retry_attempt: int):
+    async def manage_retry(
+        self, jobs: List[Dict], template: str, subject: str, retry_attempt: int
+    ):
         pass

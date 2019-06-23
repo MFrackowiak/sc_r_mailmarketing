@@ -5,7 +5,7 @@ from typing import Dict, List
 
 from aiohttp import ClientSession
 
-from email_client.integrations.email.abstract import EmailResult
+from common.enums import EmailResult
 from email_client.integrations.web.abstract import AbstractWebClient
 
 
