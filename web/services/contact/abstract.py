@@ -1,59 +1,56 @@
 from abc import abstractmethod, ABC
-from typing import List
-
-from web.models.contact import Contact
-from web.models.segment import Segment
+from typing import List, Dict
 
 
 class AbstractContactService(ABC):
     @abstractmethod
-    def create_contact(self, contact: Contact):
+    async def create_contact(self, contact: Dict):
         pass
 
     @abstractmethod
-    def get_contact(self, contact_id: int) -> Contact:
+    async def get_contact(self, contact_id: int) -> Dict:
         pass
 
     @abstractmethod
-    def read_contacts(self, page: int, per_page: int) -> List[Contact]:
+    async def read_contacts(self, page: int, per_page: int) -> List[Dict]:
         pass
 
     @abstractmethod
-    def update_contact(self, contact: Contact):
+    async def update_contact(self, contact: Dict):
         pass
 
     @abstractmethod
-    def delete_contact(self, contact_id: int):
+    async def delete_contact(self, contact_id: int):
         pass
 
     @abstractmethod
-    def create_segment(self, segment: Segment):
+    async def create_segment(self, segment: Dict):
         pass
 
     @abstractmethod
-    def get_segment(self, segment_id: int) -> Segment:
+    async def get_segment(self, segment_id: int) -> Dict:
         pass
 
     @abstractmethod
-    def read_segments(self, page: int, per_page: int) -> List[Contact]:
+    async def read_segments(self, page: int, per_page: int) -> List[Dict]:
         pass
 
     @abstractmethod
-    def update_segment(self, segment: Segment):
+    async def update_segment(self, segment: Dict):
         pass
 
     @abstractmethod
-    def delete_segment(self, segment_id: int):
+    async def delete_segment(self, segment_id: int):
         pass
 
     @abstractmethod
-    def list_contacts_in_segment(self, segment_id: int):
+    async def list_contacts_in_segment(self, segment_id: int):
         pass
 
     @abstractmethod
-    def add_contact_to_segment(self, segment_id: int, contact_id: int):
+    async def add_contact_to_segment(self, segment_id: int, contact_id: int):
         pass
 
     @abstractmethod
-    def remove_contact_from_segment(self, segment_id: int, contact_id: int):
+    async def remove_contact_from_segment(self, segment_id: int, contact_id: int):
         pass

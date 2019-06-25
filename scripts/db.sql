@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS contact;
+DROP TABLE IF EXISTS contact CASCADE;
 CREATE TABLE contact (
   id serial PRIMARY KEY,
   name VARCHAR(64) NOT NULL,
@@ -7,13 +7,13 @@ CREATE TABLE contact (
   last_name VARCHAR(64) DEFAULT ''
 );
 
-DROP TABLE IF EXISTS segment;
+DROP TABLE IF EXISTS segment CASCADE;
 CREATE TABLE segment (
   id serial PRIMARY KEY,
   name VARCHAR(64) NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS segment_contact;
+DROP TABLE IF EXISTS segment_contact CASCADE;
 CREATE TABLE segment_contact (
   contact_id serial NOT NULL,
   segment_id serial NOT NULL,
@@ -26,14 +26,14 @@ CREATE TABLE segment_contact (
     ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS email_template;
+DROP TABLE IF EXISTS email_template CASCADE;
 CREATE TABLE email_template (
   id serial PRIMARY KEY,
   name VARCHAR(128) NOT NULL,
   template TEXT NOT NULL
 );
 
-DROP TABLE IF EXISTS email_request;
+DROP TABLE IF EXISTS email_request CASCADE;
 CREATE TABLE email_request (
   id serial PRIMARY KEY,
   name VARCHAR(128) NOT NULL,
@@ -47,12 +47,16 @@ CREATE TABLE email_request (
     ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS job;
+DROP TABLE IF EXISTS job CASCADE;
 CREATE TABLE job (
   id serial PRIMARY KEY,
   request_id serial NOT NULL,
   status VARCHAR(16) NOT NULL,
+  contact_id serial NOT NULL,
   CONSTRAINT job_request_fk FOREIGN KEY (request_id)
     REFERENCES email_request (id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT job_contact_fk FOREIGN KEY (contact_id)
+    REFERENCES contact (id) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE CASCADE
 );
