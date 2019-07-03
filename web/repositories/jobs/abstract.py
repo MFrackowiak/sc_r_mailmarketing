@@ -8,6 +8,10 @@ class AbstractJobRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_email_request_job_data(self, email_request_id: int) -> List[Dict]:
+        pass
+
+    @abstractmethod
     async def get_email_requests(self) -> List[Dict]:
         pass
 

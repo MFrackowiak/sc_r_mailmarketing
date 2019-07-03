@@ -6,3 +6,4 @@ class EmailResult(Enum):
     AUTH_FAILURE = "auth_failure"
     FAILURE = "failure"
     RECOVERABLE_FAILURE = "retry"
+    PENDING = "pending"

@@ -1,4 +1,4 @@
-from sqlalchemy import MetaData, Table, Column, Integer, String
+from sqlalchemy import MetaData, Table, Column, Integer, String, Text
 
 metadata = MetaData()
 
@@ -25,4 +25,33 @@ segment_contact_table = Table(
     metadata,
     Column("contact_id", Integer),
     Column("segment_id", Integer),
+)
+
+
+email_template_table = Table(
+    "email_template",
+    metadata,
+    Column("id", Integer),
+    Column("name", String(128)),
+    Column("template", Text),
+)
+
+
+email_request_table = Table(
+    "email_request",
+    metadata,
+    Column("id", Integer),
+    Column("name", String(128)),
+    Column("template_id", Integer),
+    Column("segment_id", Integer),
+)
+
+
+job_table = Table(
+    "job",
+    metadata,
+    Column("id", Integer),
+    Column("request_id", Integer),
+    Column("status", String(16)),
+    Column("contact_id", Integer),
 )
