@@ -27,7 +27,13 @@ class EmailServiceTestCase(TestCase):
             {"id": 146, "contact_id": 13, "name": "User1", "email": "user1@co.co"},
             {"id": 147, "contact_id": 14, "name": "User1", "email": "user1@co.co"},
         ]
-        self._job_repo.create_email_request.return_value = 42, self._jobs
+        self._job_repo.create_email_request.return_value = {
+            "id": 42,
+            "template_id": 213,
+            "segment_id": 189,
+            "name": "Take a look at a new feature",
+        }
+        self._job_repo.get_email_requests_job_statuses.return_value = self._jobs
         self._template_repo.get_email_template.return_value = {
             "id": 213,
             "name": "Feature email",
@@ -39,10 +45,22 @@ class EmailServiceTestCase(TestCase):
             189, 213, "Take a look at a new feature"
         )
 
-        self.assertEqual((42, None), result)
+        self.assertEqual(
+            (
+                {
+                    "id": 42,
+                    "template_id": 213,
+                    "segment_id": 189,
+                    "name": "Take a look at a new feature",
+                },
+                None,
+            ),
+            result,
+        )
         self._job_repo.create_email_request.assert_awaited_once_with(
             189, 213, "Take a look at a new feature"
         )
+        self._job_repo.get_email_requests_job_statuses.assert_awaited_once_with(42)
         self._email_client.schedule_mailing_jobs.assert_awaited_once_with(
             self._jobs, "Click and see for yourself.", "Take a look at a new feature"
         )
@@ -57,7 +75,15 @@ class EmailServiceTestCase(TestCase):
         )
 
         self.assertEqual(
-            (42, "Request malformed: Expected str, not int, contact administrator."),
+            (
+                {
+                    "id": 42,
+                    "template_id": 213,
+                    "segment_id": 189,
+                    "name": "Take a look at a new feature",
+                },
+                "Request malformed: Expected str, not int, contact administrator.",
+            ),
             result,
         )
         self._job_repo.create_email_request.assert_awaited_once_with(
@@ -76,7 +102,18 @@ class EmailServiceTestCase(TestCase):
             189, 213, "Take a look at a new feature"
         )
 
-        self.assertEqual((42, "Email service not available: Unknown reason."), result)
+        self.assertEqual(
+            (
+                {
+                    "id": 42,
+                    "template_id": 213,
+                    "segment_id": 189,
+                    "name": "Take a look at a new feature",
+                },
+                "Email service not available: Unknown reason.",
+            ),
+            result,
+        )
         self._job_repo.create_email_request.assert_awaited_once_with(
             189, 213, "Take a look at a new feature"
         )
@@ -93,7 +130,18 @@ class EmailServiceTestCase(TestCase):
             189, 213, "Take a look at a new feature"
         )
 
-        self.assertEqual((42, "Unexpected error occurred: No server."), result)
+        self.assertEqual(
+            (
+                {
+                    "id": 42,
+                    "template_id": 213,
+                    "segment_id": 189,
+                    "name": "Take a look at a new feature",
+                },
+                "Unexpected error occurred: No server.",
+            ),
+            result,
+        )
         self._job_repo.create_email_request.assert_awaited_once_with(
             189, 213, "Take a look at a new feature"
         )

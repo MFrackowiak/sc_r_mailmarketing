@@ -23,8 +23,11 @@ class EmailService(AbstractEmailService):
         self._email_client = email_client
 
     async def send_emails(self, segment_id: int, template_id: int, subject: str):
-        created_request_id, jobs = await self._job_repository.create_email_request(
+        created_request = await self._job_repository.create_email_request(
             segment_id, template_id, subject
+        )
+        jobs = await self._job_repository.get_email_requests_job_statuses(
+            created_request["id"]
         )
         template = await self._template_repository.get_email_template(template_id)
         error = None
@@ -40,7 +43,7 @@ class EmailService(AbstractEmailService):
         except UnexpectedServiceError as e:
             error = f"Unexpected error occurred: {e}."
 
-        return created_request_id, error
+        return created_request, error
 
     async def get_email_requests(self):
         return await self._job_repository.get_email_requests()
