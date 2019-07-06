@@ -1,5 +1,6 @@
 from voluptuous import Or, Schema, Email, Optional, ALLOW_EXTRA, Length, And
 
+
 job_schema = Schema(
     {"id": Or(str, int), "email": Email(), Optional("name"): str},
     required=True,

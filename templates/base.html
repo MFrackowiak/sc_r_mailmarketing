@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <title>Mail Marketing</title>
+  <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+      integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q="
+      crossorigin="anonymous"/>
+  {% block head_content %}{% end %}
+</head>
+<body>
+  {% include "include/menu.html" %}
+
+<div class="ui container">
+  {% block body_content %}{% end %}
+</div>
+
+<script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+        integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI="
+        crossorigin="anonymous"></script>
+<script>
+  $(".dropdown").dropdown();
+</script>
+{% block body_scripts %}{% end %}
+</body>
+</html>

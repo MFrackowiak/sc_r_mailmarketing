@@ -12,9 +12,17 @@ class ContactService(AbstractContactService):
         return await self._contact_repository.create_contact(contact)
 
     async def get_contact(self, contact_id: int) -> Dict:
-        return await self._contact_repository.get_contact_with_segments(contact_id)
+        contact, segments = await self._contact_repository.get_contact_with_segments(
+            contact_id
+        )
+        contact["segments"] = segments
+
+        return contact
 
     async def read_contacts(self, page: int, per_page: int) -> List[Dict]:
+        if page < 0:
+            page = 0
+
         return await self._contact_repository.read_contacts(page, per_page)
 
     async def update_contact(self, contact: Dict):

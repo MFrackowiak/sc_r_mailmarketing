@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Dict, List
 
 
 class AbstractEmailService(ABC):
@@ -17,4 +17,20 @@ class AbstractEmailService(ABC):
 
     @abstractmethod
     async def update_jobs_statuses(self, statuses: Dict):
+        pass
+
+    @abstractmethod
+    async def list_email_templates(self) -> List[Dict]:
+        pass
+
+    @abstractmethod
+    async def get_email_template(self, template_id: int) -> Dict:
+        pass
+
+    @abstractmethod
+    async def update_email_template(self, template: Dict):
+        pass
+
+    @abstractmethod
+    async def create_email_template(self, template: Dict) -> Dict:
         pass

@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from common.exceptions import (
     ValidationError,
@@ -7,19 +7,14 @@ from common.exceptions import (
 )
 from web.integrations.email_client.http import EmailHTTPClient
 from web.repositories.jobs.abstract import AbstractJobRepository
-from web.repositories.templates.abstract import AbstractTemplateRepository
 from web.services.email.abstract import AbstractEmailService
 
 
 class EmailService(AbstractEmailService):
     def __init__(
-        self,
-        job_repository: AbstractJobRepository,
-        template_repository: AbstractTemplateRepository,
-        email_client: EmailHTTPClient,
+        self, job_repository: AbstractJobRepository, email_client: EmailHTTPClient
     ):
         self._job_repository = job_repository
-        self._template_repository = template_repository
         self._email_client = email_client
 
     async def send_emails(self, segment_id: int, template_id: int, subject: str):
@@ -29,7 +24,7 @@ class EmailService(AbstractEmailService):
         jobs = await self._job_repository.get_email_requests_job_statuses(
             created_request["id"]
         )
-        template = await self._template_repository.get_email_template(template_id)
+        template = await self._job_repository.get_template(template_id)
         error = None
 
         try:
@@ -56,3 +51,15 @@ class EmailService(AbstractEmailService):
 
     async def update_jobs_statuses(self, statuses: Dict):
         return await self._job_repository.update_job_statuses(statuses)
+
+    async def list_email_templates(self) -> List[Dict]:
+        return await self._job_repository.list_templates()
+
+    async def get_email_template(self, template_id: int) -> Dict:
+        return await self._job_repository.get_template(template_id)
+
+    async def update_email_template(self, template: Dict):
+        return await self._job_repository.update_template(template)
+
+    async def create_email_template(self, template: Dict) -> Dict:
+        return await self._job_repository.create_template(template)

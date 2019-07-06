@@ -8,19 +8,15 @@ from common.exceptions import (
 )
 from web.integrations.email_client.abstract import AbstractEmailClient
 from web.repositories.jobs.abstract import AbstractJobRepository
-from web.repositories.templates.abstract import AbstractTemplateRepository
 from web.services.email.service import EmailService
 
 
 class EmailServiceTestCase(TestCase):
     def setUp(self):
         self._job_repo = create_autospec(AbstractJobRepository)
-        self._template_repo = create_autospec(AbstractTemplateRepository)
         self._email_client = create_autospec(AbstractEmailClient)
 
-        self.service = EmailService(
-            self._job_repo, self._template_repo, self._email_client
-        )
+        self.service = EmailService(self._job_repo, self._email_client)
 
         self._jobs = [
             {"id": 145, "contact_id": 12, "name": "User1", "email": "user1@co.co"},
@@ -34,7 +30,7 @@ class EmailServiceTestCase(TestCase):
             "name": "Take a look at a new feature",
         }
         self._job_repo.get_email_requests_job_statuses.return_value = self._jobs
-        self._template_repo.get_email_template.return_value = {
+        self._job_repo.get_template.return_value = {
             "id": 213,
             "name": "Feature email",
             "template": "Click and see for yourself.",

@@ -1,0 +1,28 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+  <h1>Segment details</h1>
+  <div class="ui relaxed divided list">
+    <div class="item">
+      <div class="content">
+        <div class="header">Name</div>
+        <div class="description">{{ segment['name'] }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <div class="header">Contacts</div>
+        <div class="description">
+          <div class="ui list">
+            {% for contact in contacts %}
+              <a class="item" href="/contacts/{{ contact['id'] }}">{{ contact['name'] }}</a>
+            {% end %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="/segments/{{ segment['id'] }}/edit" class="ui basic blue button">
+    Edit
+  </a>
+{% end %}

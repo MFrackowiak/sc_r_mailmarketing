@@ -1,0 +1,25 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+  <form class="ui form" method="post" action="{{ action }}">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" name="name" placeholder="Username" value="{{ initial.get('name', '') }}">
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Email" value="{{ initial.get('email', '') }}">
+    </div>
+    <div class="field">
+      <label>First name</label>
+      <input type="text" name="first_name" placeholder="First name" value="{{ initial.get('first_name', '') }}">
+    </div>
+    <div class="field">
+      <label>Last name</label>
+      <input type="text" name="last_name" placeholder="Last name" value="{{ initial.get('last_name', '') }}">
+    </div>
+    <button class="ui basic green button">
+      Save
+    </button>
+  </form>
+{% end %}

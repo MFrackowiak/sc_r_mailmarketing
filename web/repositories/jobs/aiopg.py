@@ -190,3 +190,38 @@ class SimplePostgresJobRepository(AbstractJobRepository):
                 )
             )
             await conn.execute(query)
+
+    async def create_template(self, template: Dict) -> Dict:
+        async with self._db_engine.acquire() as conn:
+            result = await conn.execute(
+                email_template_table.insert()
+                .values(template)
+                .returning(email_template_table.c.id)
+            )
+            template["id"] = await result.scalar()
+        return template
+
+    async def update_template(self, template: Dict):
+        async with self._db_engine.acquire() as conn:
+            update = (
+                email_template_table.update()
+                .where(email_template_table.c.id == template["id"])
+                .values({key: value for key, value in template.items() if key != "id"})
+            )
+            await conn.execute(update)
+
+    async def get_template(self, template_id: int) -> Dict:
+        async with self._db_engine.acquire() as conn:
+            template = await conn.execute(
+                email_template_table.select(email_template_table.c.id == template_id)
+            )
+            return dict(await template.fetchone())
+
+    async def list_templates(self) -> List[Dict]:
+        async with self._db_engine.acquire() as conn:
+            templates = await conn.execute(
+                select(
+                    [email_template_table.c.id, email_template_table.c.name]
+                ).select_from(email_template_table)
+            )
+            return [dict(template) for template in await templates.fetchall()]

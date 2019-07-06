@@ -137,18 +137,9 @@ class AioPGContactRepositoryTestCase(AioPGBaseTestCase):
 
         self.assertEqual(
             [
-                {
-                    "id": 1,
-                    "name": "test-camp",
-                },
-                {
-                    "id": 2,
-                    "name": "camp2",
-                },
-                {
-                    "id": 3,
-                    "name": "camp3",
-                },
+                {"id": 1, "name": "test-camp"},
+                {"id": 2, "name": "camp2"},
+                {"id": 3, "name": "camp3"},
             ],
             campaigns,
         )
@@ -169,7 +160,7 @@ class AioPGContactRepositoryTestCase(AioPGBaseTestCase):
                 "id": 3,
                 "name": "camp3",
                 "segment": {"name": "seg", "id": 2},
-                "template": {"name": "template-2", "id":  2},
+                "template": {"name": "template-2", "id": 2},
             },
             campaign,
         )
@@ -235,4 +226,74 @@ class AioPGContactRepositoryTestCase(AioPGBaseTestCase):
         self.assertEqual(
             [(1, "success"), (2, "success"), (3, "failure"), (4, "retry")],
             await post_update.fetchall(),
+        )
+
+    async def test_create_template(self):
+        template = {"name": "Test Template 1", "template": "Template content"}
+
+        saved_template = await self.repository.create_template(template)
+
+        self.assertEqual(1, saved_template["id"])
+
+        post_create = await self.connection.execute(
+            "SELECT id, name, template FROM email_template"
+        )
+
+        self.assertEqual(
+            [(1, "Test Template 1", "Template content")], await post_create.fetchall()
+        )
+
+    async def test_update_template(self):
+        await self.connection.execute(
+            """
+            INSERT INTO email_template (id, name, template) VALUES 
+            (1, 'Templ 1', 'Templ 1 long content')
+            """
+        )
+
+        await self.repository.update_template(
+            {"id": 1, "name": "Updated 1", "template": "Templ 1 short"}
+        )
+
+        post_update = await self.connection.execute(
+            "SELECT id, name, template FROM email_template"
+        )
+
+        self.assertEqual(
+            [(1, "Updated 1", "Templ 1 short")], await post_update.fetchall()
+        )
+
+    async def test_get_template(self):
+        await self.connection.execute(
+            """
+            INSERT INTO email_template (id, name, template) VALUES 
+            (1, 'Templ 1', 'Templ 1 long content')
+            """
+        )
+
+        template = await self.repository.get_template(1)
+
+        self.assertEqual(
+            {"id": 1, "name": "Templ 1", "template": "Templ 1 long content"}, template
+        )
+
+    async def test_list_templates(self):
+        await self.connection.execute(
+            """
+            INSERT INTO email_template (id, name, template) VALUES 
+            (1, 'Templ 1', 'Templ 1 long content'),
+            (2, 'Templ 2', 'Templ 2 long content'),
+            (3, 'Templ 3', 'Templ 3 long content')
+            """
+        )
+
+        templates = await self.repository.list_templates()
+
+        self.assertEqual(
+            [
+                {"id": 1, "name": "Templ 1"},
+                {"id": 2, "name": "Templ 2"},
+                {"id": 3, "name": "Templ 3"},
+            ],
+            templates,
         )

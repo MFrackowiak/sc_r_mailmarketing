@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 
 class AbstractContactRepository(ABC):
@@ -8,7 +8,9 @@ class AbstractContactRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_contact_with_segments(self, contact_id: int) -> Dict:
+    async def get_contact_with_segments(
+        self, contact_id: int
+    ) -> Tuple[Dict, List[Dict]]:
         pass
 
     @abstractmethod

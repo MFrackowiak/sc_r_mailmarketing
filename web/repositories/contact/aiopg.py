@@ -42,7 +42,7 @@ class SimplePostgresContactRepository(AbstractContactRepository):
                 )
             )
 
-        return contact, list(map(dict, await segments.fetchall()))
+            return contact, list(map(dict, await segments.fetchall()))
 
     async def read_contacts(self, page: int = 0, per_page: int = 50) -> List[Dict]:
         async with self._db_engine.acquire() as conn:
@@ -52,7 +52,7 @@ class SimplePostgresContactRepository(AbstractContactRepository):
                 .limit(per_page)
                 .order_by(contact_table.c.id)
             )
-        return [dict(contact) for contact in await contacts.fetchall()]
+            return [dict(contact) for contact in await contacts.fetchall()]
 
     async def update_contact(self, contact: Dict):
         async with self._db_engine.acquire() as conn:

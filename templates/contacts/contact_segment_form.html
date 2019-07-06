@@ -1,0 +1,22 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+<form class="ui form" method="post" action="{{ action }}">
+  <div class="field">
+    <label>Segment</label>
+    <div class="ui selection dropdown">
+      <input type="hidden" name="segment_id">
+      <i class="dropdown icon"></i>
+      <div class="default text">Segment</div>
+      <div class="menu">
+        {% for segment in segments %}
+        <div class="item" data-value="{{ segment['id'] }}">{{ segment['name'] }}</div>
+        {% end %}
+      </div>
+    </div>
+  </div>
+  <button class="ui basic green button">
+    Save
+  </button>
+</form>
+{% end %}

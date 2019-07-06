@@ -28,3 +28,19 @@ class AbstractJobRepository(ABC):
     @abstractmethod
     async def update_job_statuses(self, statuses: Dict):
         pass
+
+    @abstractmethod
+    async def create_template(self, template: Dict) -> Dict:
+        pass
+
+    @abstractmethod
+    async def update_template(self, template: Dict):
+        pass
+
+    @abstractmethod
+    async def get_template(self, template_id: int) -> Dict:
+        pass
+
+    @abstractmethod
+    async def list_templates(self) -> List[Dict]:
+        pass
