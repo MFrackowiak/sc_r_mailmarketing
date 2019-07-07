@@ -25,7 +25,7 @@ class SimpleRedisSettingsStorage(AbstractSettingsStorage):
         headers_list = await self._connection.hgetall(
             self.get_key("headers"), encoding="utf8"
         )
-        return dict(zip(headers_list[::2], headers_list[1::2]))
+        return headers_list
 
     async def get_email_from(self) -> Dict[str, str]:
         name, email = await self._connection.hmget(

@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 class AbstractEmailService(ABC):
     @abstractmethod
-    async def send_emails(self, segment_id: int, template_id: int, subject: str):
+    async def send_emails(
+        self, segment_id: int, template_id: int, subject: str
+    ) -> Tuple[Dict, str]:
         pass
 
     @abstractmethod

@@ -4,7 +4,7 @@ from collections import defaultdict
 from logging import getLogger
 from typing import List, Dict, Optional, Tuple
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, BasicAuth
 
 from common.enums import EmailResult
 from email_client.integrations.email.abstract import AbstractEmailGatewayClient
@@ -46,7 +46,7 @@ class FlypsGatewayClient(AbstractEmailGatewayClient):
                     {"id": job["id"], "message_id": message_id}
                 )
             else:
-                results_grouped[result].append(job["id"])
+                results_grouped[result].append({"id": job["id"], "message_id": ""})
 
         return results_grouped, retry_jobs
 
@@ -72,7 +72,7 @@ class FlypsGatewayClient(AbstractEmailGatewayClient):
                     "text": self.render_template(job, template),
                     "headers": headers,
                 },
-                auth=auth,
+                auth=BasicAuth(*auth),
             )
             if response.status == 202:
                 response_json = await response.json()

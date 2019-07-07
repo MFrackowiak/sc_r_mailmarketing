@@ -53,6 +53,7 @@ CREATE TABLE job (
   request_id serial NOT NULL,
   status VARCHAR(16) NOT NULL,
   contact_id serial NOT NULL,
+  message_id VARCHAR(40) DEFAULT '',
   CONSTRAINT job_request_fk FOREIGN KEY (request_id)
     REFERENCES email_request (id) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE CASCADE,

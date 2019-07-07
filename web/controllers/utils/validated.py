@@ -10,13 +10,10 @@ class ValidatedFormRequestHandler(RequestHandler):
     def get_data(self, request_method: str):
         schema = self.schemas[request_method]
 
-        arg_getter = (
-            self.get_body_argument
-            if request_method == "post"
-            else self.get_query_argument
-        )
-
-        data = {key: arg_getter(key) for key in schema.schema.keys()}
+        data = {
+            key: self.get_body_argument(key)
+            for key in self.request.body_arguments.keys()
+        }
 
         if not data:
             return None

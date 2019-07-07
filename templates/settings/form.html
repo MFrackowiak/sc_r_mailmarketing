@@ -1,0 +1,42 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+<div class="ui segments">
+  <div class="ui segment">
+    <h1>Email settings</h1>
+    <form class="ui form" method="post" action=>
+      <div class="field">
+        <label>Email from header - name:</label>
+        <input type="text" name="name" placeholder="Name"
+               value="{{ initial['from'].get('name') or '' }}">
+      </div>
+      <div class="field">
+        <label>Email from header - email:</label>
+        <input type="email" name="email" placeholder="Email"
+               value="{{ initial['from'].get('email') or '' }}">
+      </div>
+      <button class="ui basic green button">
+        Save
+      </button>
+    </form>
+  </div>
+  <div class="ui segment">
+    <h1>Authorization data</h1>
+    <form class="ui form" method="post">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" name="user" placeholder="Username"
+               value="{{ initial['auth'].get('user') or '' }}">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="password" name="password" placeholder="Password"
+               value="{{ initial['auth'].get('password') or '' }}">
+      </div>
+      <button class="ui basic green button">
+        Save authorization data
+      </button>
+    </form>
+  </div>
+</div>
+{% end %}

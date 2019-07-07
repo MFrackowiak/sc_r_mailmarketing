@@ -24,6 +24,7 @@ def validate_json(func: Callable):
             http_method = self.request.method.lower()
 
             data = escape.json_decode(self.request.body)
+            print(data, self.request.body_arguments)
 
             validated_data = self._schemas[http_method](data)
         except Invalid as e:
@@ -58,6 +59,9 @@ def handle_errors(func: Callable):
         try:
             await func(self, *args, **kwargs)
         except ValidationError as e:
+            logger.error(
+                f"Encounctered an error when processing request - {self.__class__.__name__}.{func.__name__}: {traceback.format_exc()}"
+            )
             self.set_status(HTTPStatus.BAD_REQUEST)
             self.write({"error": str(e)})
         except UnsupportedFormatError as e:

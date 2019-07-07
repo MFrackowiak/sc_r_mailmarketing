@@ -1,3 +1,4 @@
+from itertools import chain
 from typing import Dict, List
 
 from aiopg.sa import Engine
@@ -176,20 +177,20 @@ class SimplePostgresJobRepository(AbstractJobRepository):
             ]
 
     async def update_job_statuses(self, statuses: Dict):
+        updates = tuple(
+            (job["id"], status, job["message_id"])
+            for status, jobs in statuses.items()
+            for job in jobs
+        )
         async with self._db_engine.acquire() as conn:
-            query = (
-                job_table.update()
-                .where(job_table.c.id.in_(sum(statuses.values(), [])))
-                .values(
-                    status=case(
-                        [
-                            (job_table.c.id.in_(job_ids), status)
-                            for status, job_ids in statuses.items()
-                        ]
-                    )
-                )
-            )
-            await conn.execute(query)
+            query = f"""
+                INSERT INTO job (id, status, message_id)
+                VALUES {', '.join(['(%s, %s, %s)'] * len(updates))}
+                ON CONFLICT (ID) DO UPDATE SET
+                  status = excluded.status,
+                  message_id = excluded.message_id
+            """
+            await conn.execute(query, *chain(*updates))
 
     async def create_template(self, template: Dict) -> Dict:
         async with self._db_engine.acquire() as conn:

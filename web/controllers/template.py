@@ -6,6 +6,7 @@ from web.controllers.utils.errors import handle_errors
 from web.controllers.utils.validated import ValidatedFormRequestHandler
 from web.schemas import template_schema
 from web.services.email.abstract import AbstractEmailService
+from web.validation import validate_template_schema
 
 
 class BaseTemplateRequestHandler(ValidatedFormRequestHandler):
@@ -29,6 +30,7 @@ class TemplatesHandler(BaseTemplateRequestHandler):
     @handle_errors
     async def post(self):
         data = self.get_data("post")
+        validate_template_schema(data)
         template = await self.service.create_email_template(data)
         self.redirect(f"/templates/{template['id']}")
 
@@ -39,12 +41,16 @@ class TemplateHandler(BaseTemplateRequestHandler):
     @handle_errors
     async def get(self, template_id: str):
         template = await self.service.get_email_template(int(template_id))
-        self.write(self.loader.load("templates/template.html").generate(template=template))
+        self.write(
+            self.loader.load("templates/template.html").generate(template=template)
+        )
 
     @handle_errors
     async def post(self, template_id: str):
         data = self.get_data("post")
+        validate_template_schema(data)
         data["id"] = int(template_id)
+
         await self.service.update_email_template(data)
         await self.get(template_id)
 

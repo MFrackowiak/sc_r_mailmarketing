@@ -215,16 +215,28 @@ class AioPGContactRepositoryTestCase(AioPGBaseTestCase):
 
         await self.repository.update_job_statuses(
             {
-                EmailResult.SUCCESS.value: [1, 2],
-                EmailResult.FAILURE.value: [3],
-                EmailResult.RECOVERABLE_FAILURE.value: [4],
+                EmailResult.SUCCESS.value: [
+                    {"id": 1, "message_id": "a3e1"},
+                    {"id": 2, "message_id": "d41a"},
+                ],
+                EmailResult.FAILURE.value: [{"id": 3, "message_id": "e451"}],
+                EmailResult.RECOVERABLE_FAILURE.value: [
+                    {"id": 4, "message_id": "41aa"}
+                ],
             }
         )
 
-        post_update = await self.connection.execute("SELECT id, status FROM job")
+        post_update = await self.connection.execute(
+            "SELECT id, status, message_id FROM job ORDER BY id"
+        )
 
         self.assertEqual(
-            [(1, "success"), (2, "success"), (3, "failure"), (4, "retry")],
+            [
+                (1, "success", "a3e1"),
+                (2, "success", "d41a"),
+                (3, "failure", "e451"),
+                (4, "retry", "41aa"),
+            ],
             await post_update.fetchall(),
         )
 

@@ -12,7 +12,7 @@ class EmailHTTPClientTestCase(TestCase):
 
     async def test_get_custom_headers_and_email_from(self):
         self.session.get.return_value = Mock(
-            code=200,
+            status=200,
             json=CoroutineMock(
                 return_value={
                     "email_from": {"name": "Admin", "email": "some@guy.co"},
@@ -31,7 +31,7 @@ class EmailHTTPClientTestCase(TestCase):
         self.session.get.assert_awaited_once_with("http://client/api/v1/settings")
 
     async def test_update_email_client_settings(self):
-        self.session.patch.return_value = Mock(code=200)
+        self.session.patch.return_value = Mock(status=200)
 
         await self.client.update_email_client_settings(
             {
@@ -49,7 +49,7 @@ class EmailHTTPClientTestCase(TestCase):
         )
 
     async def test_schedule_mailing_jobs(self):
-        self.session.post.return_value = Mock(code=202)
+        self.session.post.return_value = Mock(status=202)
         jobs = [
             {"id": 1, "name": "username", "email": "admin@co.co"},
             {"id": 2, "name": "username", "email": "admin1@co.co"},

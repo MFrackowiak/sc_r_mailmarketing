@@ -16,9 +16,9 @@ class BaseHTTPClient:
         except (TypeError, AttributeError, KeyError):
             error = "Unknown error"
 
-        if response.code == 400:
+        if response.status == 400:
             raise ValidationError(error)
-        elif response.code in {502, 503}:
+        elif response.status in {502, 503}:
             raise UnavailableServiceError(error)
         else:
             raise UnexpectedServiceError(error)

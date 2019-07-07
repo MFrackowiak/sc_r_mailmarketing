@@ -23,7 +23,7 @@ class EmailHTTPClient(AbstractEmailClient, BaseHTTPClient):
     async def get_custom_headers_and_email_from(self) -> Dict:
         response = await self._session.get(f"{self._base_url}{self.SETTINGS_ENDPOINT}")
 
-        if response.code != 200:
+        if response.status != 200:
             await self._raise_for_code(response)
 
         return await response.json()
@@ -34,7 +34,7 @@ class EmailHTTPClient(AbstractEmailClient, BaseHTTPClient):
             f"{self._base_url}{self.SETTINGS_ENDPOINT}", json=settings
         )
 
-        if response.code != 200:
+        if response.status != 200:
             await self._raise_for_code(response)
 
     @catch_timeout
@@ -46,5 +46,5 @@ class EmailHTTPClient(AbstractEmailClient, BaseHTTPClient):
             json={"jobs": jobs, "template": template, "subject": subject},
         )
 
-        if response.code != 202:
+        if response.status != 202:
             await self._raise_for_code(response)

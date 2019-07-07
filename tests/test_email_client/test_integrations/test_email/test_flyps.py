@@ -1,3 +1,4 @@
+from aiohttp import BasicAuth
 from asynctest import TestCase, CoroutineMock, patch, call, Mock, MagicMock
 
 from common.enums import EmailResult
@@ -106,7 +107,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=("user", "admin1"),
+            auth=BasicAuth("user", "admin1"),
         )
 
     async def test_send_email_400(self):
@@ -136,7 +137,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=("user", "admin1"),
+            auth=BasicAuth("user", "admin1"),
         )
 
     async def test_send_email_401(self):
@@ -166,7 +167,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=("user", "admin1"),
+            auth=BasicAuth("user", "admin1"),
         )
 
     async def test_send_email_500(self):
@@ -196,7 +197,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=("user", "admin1"),
+            auth=BasicAuth("user", "admin1"),
         )
 
     @patch("email_client.integrations.email.flyps.logger")
@@ -228,7 +229,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=("user", "admin1"),
+            auth=BasicAuth("user", "admin1"),
         )
 
     @patch("email_client.integrations.email.flyps.logger")
@@ -260,5 +261,5 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=("user", "admin1"),
+            auth=BasicAuth("user", "admin1"),
         )

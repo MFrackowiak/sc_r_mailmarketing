@@ -11,7 +11,7 @@ from web.integrations.http import BaseHTTPClient
 class TestBaseHTTPClient(TestCase):
     async def test_bad_request(self):
         response = Mock(
-            code=400,
+            status=400,
             json=CoroutineMock(return_value={"error": "Missing required_data"}),
         )
 
@@ -21,7 +21,7 @@ class TestBaseHTTPClient(TestCase):
         self.assertEqual(exc_dec.exception.args, ("Missing required_data",))
 
     async def test_bad_gateway(self):
-        response = Mock(code=502, json=CoroutineMock(return_value={"status": "Down"}))
+        response = Mock(status=502, json=CoroutineMock(return_value={"status": "Down"}))
 
         with self.assertRaises(UnavailableServiceError) as exc_dec:
             await BaseHTTPClient._raise_for_code(response)
@@ -29,7 +29,7 @@ class TestBaseHTTPClient(TestCase):
         self.assertEqual(exc_dec.exception.args, ("Unknown error",))
 
     async def test_service_unavailable(self):
-        response = Mock(code=503, json=CoroutineMock(side_effect=AttributeError()))
+        response = Mock(status=503, json=CoroutineMock(side_effect=AttributeError()))
 
         with self.assertRaises(UnavailableServiceError) as exc_dec:
             await BaseHTTPClient._raise_for_code(response)
@@ -38,7 +38,7 @@ class TestBaseHTTPClient(TestCase):
 
     async def test_internal_server_error(self):
         response = Mock(
-            code=500, json=CoroutineMock(return_value={"error": "Server exploded"})
+            status=500, json=CoroutineMock(return_value={"error": "Server exploded"})
         )
 
         with self.assertRaises(UnexpectedServiceError) as exc_dec:

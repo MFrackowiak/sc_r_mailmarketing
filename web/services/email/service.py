@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from common.exceptions import (
     ValidationError,
@@ -17,11 +17,13 @@ class EmailService(AbstractEmailService):
         self._job_repository = job_repository
         self._email_client = email_client
 
-    async def send_emails(self, segment_id: int, template_id: int, subject: str):
+    async def send_emails(
+        self, segment_id: int, template_id: int, subject: str
+    ) -> Tuple[Dict, str]:
         created_request = await self._job_repository.create_email_request(
             segment_id, template_id, subject
         )
-        jobs = await self._job_repository.get_email_requests_job_statuses(
+        jobs = await self._job_repository.get_email_request_job_data(
             created_request["id"]
         )
         template = await self._job_repository.get_template(template_id)

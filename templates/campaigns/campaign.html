@@ -1,0 +1,48 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+  <h1>Segment details</h1>
+  <div class="ui relaxed divided list">
+    <div class="item">
+      <div class="content">
+        <div class="header">Name</div>
+        <div class="description">{{ campaign['name'] }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <div class="header">Template</div>
+        <div class="description">
+          <a href="/templates/{{ campaign['template']['id'] }}">
+            {{ campaign['template']['name'] }}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <div class="header">Segment</div>
+        <div class="description">
+          <a href="/segments/{{ campaign['segment']['id'] }}">
+            {{ campaign['segment']['name'] }}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <div class="header">Jobs</div>
+        <div class="description">
+          <div class="ui list">
+            {% for job in jobs %}
+              <div class="item">
+                <a href="/contacts/{{ job['contact']['id'] }}">{{ job['contact']['name'] }}</a>
+                <div class="ui label {{ labels[job['status']] }}">{{ job['status'] }}</div>
+              </div>
+            {% end %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% end %}

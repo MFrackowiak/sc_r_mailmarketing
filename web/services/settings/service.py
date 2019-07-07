@@ -35,8 +35,25 @@ class SettingsService(AbstractSettingsService):
         )
 
     async def update_settings(self, settings: Dict) -> Tuple[bool, Optional[str]]:
+        formatted_settings = {}
+
+        if {"user", "password"}.issubset(settings):
+            formatted_settings["auth"] = {
+                "user": settings["user"],
+                "password": settings["password"],
+            }
+
+        if {"name", "email"}.issubset(settings):
+            formatted_settings["email_from"] = {
+                "name": settings["name"],
+                "email": settings["email"],
+            }
+
+        if "headers" in settings:
+            formatted_settings["headers"] = settings["headers"]
+
         try:
-            await self._client.update_email_client_settings(settings)
+            await self._client.update_email_client_settings(formatted_settings)
             return True, None
         except ValidationError as e:
             error = f"Request malformed: {e}, contact administrator."

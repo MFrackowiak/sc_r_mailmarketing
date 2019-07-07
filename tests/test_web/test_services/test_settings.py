@@ -71,15 +71,23 @@ class SettingsServiceTestCase(TestCase):
     async def test_update_settings(self):
         settings = {
             "headers": {"x-customer": "test"},
-            "email_from": {"name": "Noreply Guy", "email": "noreply@ur.co"},
-            "auth": {"user": "admin", "password": "admin1"},
+            "name": "Noreply Guy",
+            "email": "noreply@ur.co",
+            "user": "admin",
+            "password": "admin1",
         }
 
         success, error = await self.service.update_settings(settings)
 
         self.assertTrue(success)
         self.assertIsNone(error)
-        self._client.update_email_client_settings.assert_awaited_once_with(settings)
+        self._client.update_email_client_settings.assert_awaited_once_with(
+            {
+                "headers": {"x-customer": "test"},
+                "email_from": {"name": "Noreply Guy", "email": "noreply@ur.co"},
+                "auth": {"user": "admin", "password": "admin1"},
+            }
+        )
 
     async def test_update_settings_validation_error(self):
         self._client.update_email_client_settings.side_effect = ValidationError(
@@ -87,8 +95,10 @@ class SettingsServiceTestCase(TestCase):
         )
         settings = {
             "headers": {"x-customer": "test"},
-            "email_from": {"name": "Noreply Guy", "email": "noreply@ur.co"},
-            "auth": {"user": "admin", "password": "admin1"},
+            "name": "Noreply Guy",
+            "email": "noreply@ur.co",
+            "user": "admin",
+            "password": "admin1",
         }
 
         success, error = await self.service.update_settings(settings)
@@ -97,7 +107,13 @@ class SettingsServiceTestCase(TestCase):
         self.assertEqual(
             error, "Request malformed: Missing values, contact administrator."
         )
-        self._client.update_email_client_settings.assert_awaited_once_with(settings)
+        self._client.update_email_client_settings.assert_awaited_once_with(
+            {
+                "headers": {"x-customer": "test"},
+                "email_from": {"name": "Noreply Guy", "email": "noreply@ur.co"},
+                "auth": {"user": "admin", "password": "admin1"},
+            }
+        )
 
     async def test_update_settings_unavailable_error(self):
         self._client.update_email_client_settings.side_effect = UnavailableServiceError(
@@ -105,15 +121,23 @@ class SettingsServiceTestCase(TestCase):
         )
         settings = {
             "headers": {"x-customer": "test"},
-            "email_from": {"name": "Noreply Guy", "email": "noreply@ur.co"},
-            "auth": {"user": "admin", "password": "admin1"},
+            "name": "Noreply Guy",
+            "email": "noreply@ur.co",
+            "user": "admin",
+            "password": "admin1",
         }
 
         success, error = await self.service.update_settings(settings)
 
         self.assertFalse(success)
         self.assertEqual(error, "Email service not available: No connection.")
-        self._client.update_email_client_settings.assert_awaited_once_with(settings)
+        self._client.update_email_client_settings.assert_awaited_once_with(
+            {
+                "headers": {"x-customer": "test"},
+                "email_from": {"name": "Noreply Guy", "email": "noreply@ur.co"},
+                "auth": {"user": "admin", "password": "admin1"},
+            }
+        )
 
     async def test_update_settings_unexpected_error(self):
         self._client.update_email_client_settings.side_effect = UnexpectedServiceError(
@@ -121,12 +145,20 @@ class SettingsServiceTestCase(TestCase):
         )
         settings = {
             "headers": {"x-customer": "test"},
-            "email_from": {"name": "Noreply Guy", "email": "noreply@ur.co"},
-            "auth": {"user": "admin", "password": "admin1"},
+            "name": "Noreply Guy",
+            "email": "noreply@ur.co",
+            "user": "admin",
+            "password": "admin1",
         }
 
         success, error = await self.service.update_settings(settings)
 
         self.assertFalse(success)
         self.assertEqual(error, "Unexpected error occurred: Unknown.")
-        self._client.update_email_client_settings.assert_awaited_once_with(settings)
+        self._client.update_email_client_settings.assert_awaited_once_with(
+            {
+                "headers": {"x-customer": "test"},
+                "email_from": {"name": "Noreply Guy", "email": "noreply@ur.co"},
+                "auth": {"user": "admin", "password": "admin1"},
+            }
+        )

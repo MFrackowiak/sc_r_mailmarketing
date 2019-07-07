@@ -14,12 +14,10 @@ class SimpleRedisSettingsStorageTestCase(TestCase):
         self.storage = SimpleRedisSettingsStorage(self.redis)
 
     async def test_get_custom_headers(self):
-        self.redis.hgetall.return_value = [
-            "reply-to",
-            "Admin <admin@co.co>",
-            "x-tracing",
-            "35adc1235",
-        ]
+        self.redis.hgetall.return_value = {
+            "reply-to": "Admin <admin@co.co>",
+            "x-tracing": "35adc1235",
+        }
         self.assertEqual(
             await self.storage.get_custom_headers(),
             {"reply-to": "Admin <admin@co.co>", "x-tracing": "35adc1235"},
@@ -78,7 +76,7 @@ class SimpleRedisSettingsStorageTestCase(TestCase):
 
     async def test_get_gateway_credentials_headers_and_from(self):
         self.redis.hmget.side_effect = [["user", "admin1"], ["Admin", "admin@co.co"]]
-        self.redis.hgetall.return_value = []
+        self.redis.hgetall.return_value = {}
         self.assertEqual(
             await self.storage.get_gateway_credentials_headers_and_from(),
             (("user", "admin1"), {}, {"name": "Admin", "email": "admin@co.co"}),

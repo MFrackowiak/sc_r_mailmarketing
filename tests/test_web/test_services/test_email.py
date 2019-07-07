@@ -29,7 +29,7 @@ class EmailServiceTestCase(TestCase):
             "segment_id": 189,
             "name": "Take a look at a new feature",
         }
-        self._job_repo.get_email_requests_job_statuses.return_value = self._jobs
+        self._job_repo.get_email_request_job_data.return_value = self._jobs
         self._job_repo.get_template.return_value = {
             "id": 213,
             "name": "Feature email",
@@ -56,7 +56,7 @@ class EmailServiceTestCase(TestCase):
         self._job_repo.create_email_request.assert_awaited_once_with(
             189, 213, "Take a look at a new feature"
         )
-        self._job_repo.get_email_requests_job_statuses.assert_awaited_once_with(42)
+        self._job_repo.get_email_request_job_data.assert_awaited_once_with(42)
         self._email_client.schedule_mailing_jobs.assert_awaited_once_with(
             self._jobs, "Click and see for yourself.", "Take a look at a new feature"
         )

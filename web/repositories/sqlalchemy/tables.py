@@ -54,4 +54,5 @@ job_table = Table(
     Column("request_id", Integer),
     Column("status", String(16)),
     Column("contact_id", Integer),
+    Column("message_id", String(40)),
 )
