@@ -10,7 +10,7 @@ AVAILABLE_DATA = frozenset(
 
 def validate_template(template: str):
     """Simple validator of templates and usage of variables."""
-    all_params = findall("{([ \w_]*)}", template)
+    all_params = findall(r"{([ \w_]*)}", template)
 
     used_params = set(param for param in all_params)
 

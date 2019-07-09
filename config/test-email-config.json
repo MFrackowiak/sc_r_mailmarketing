@@ -1,0 +1,25 @@
+{
+  "port": 5000,
+  "web": {
+    "url": "http://web:5000/api/v1/job",
+    "retry_count": 3,
+    "retry_backoff": 3
+  },
+  "email": {
+    "url": "https://api.flypsdm.io/public/api/v1/sendmail",
+    "batch_size": 20,
+    "retry_count": 3,
+    "retry_backoff": 5
+  },
+  "sessions": {
+    "web": {
+      "timeout": {"total": 10}
+    },
+    "email": {
+      "timeout": {"total": 10}
+    }
+  },
+  "redis": {
+    "host": ["redis", 6379]
+  }
+}

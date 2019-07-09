@@ -18,4 +18,3 @@ class JobStatusHandler(RequestHandler):
     async def post(self, data: Dict):
         await self.service.update_jobs_statuses(data)
         self.set_status(200)
-        self.finish()

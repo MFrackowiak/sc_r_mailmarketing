@@ -57,7 +57,7 @@ class SendEmailService(AbstractSendEmailService):
     ):
         if retry_attempt > self._retry_count:
             await self._web_client.report_job_status(
-                {EmailResult.FAILURE: [job["id"] for job in jobs]}
+                {EmailResult.FAILURE: [{"id": job["id"], "message_id": ""} for job in jobs]}
             )
         else:
             await sleep(self._retry_backoff ** retry_attempt)

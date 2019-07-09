@@ -24,6 +24,7 @@ async def initialize_redis_pool(redis_config: Dict):
         minsize=redis_config.get("min_size", 5),
         maxsize=redis_config.get("min_size", 10),
         loop=get_event_loop(),
+        timeout=5,
     )
     return redis_pool
 

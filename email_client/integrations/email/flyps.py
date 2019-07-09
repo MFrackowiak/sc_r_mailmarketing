@@ -60,6 +60,11 @@ class FlypsGatewayClient(AbstractEmailGatewayClient):
         headers: Dict,
     ) -> Tuple[EmailResult, Optional[str]]:
         try:
+            auth = BasicAuth(*auth)
+        except (ValueError, TypeError):
+            return EmailResult.AUTH_FAILURE, None
+
+        try:
             response = await self._session.post(
                 self._gateway_url,
                 json={

@@ -34,9 +34,8 @@ class AioPGBaseTestCase(TestCase):
         logging.basicConfig(level=logging.DEBUG)
 
         cls.engine = cls.loop.run_until_complete(
-            init_db("database-test.json", force_init_db=True)
+            init_db("config/database-test.json", force_init_db=True)
         )
-        cls.loop.set_debug(True)
         cls.connection = cls.loop.run_until_complete(cls.engine.acquire())
         super().setUpClass()
 

@@ -26,7 +26,7 @@ class WebClient(AbstractWebClient):
         self._retry_count = retry_count
         self._retry_backoff = retry_backoff
 
-    async def report_job_status(self, statuses: Dict[EmailResult, List[int]]):
+    async def report_job_status(self, statuses: Dict[EmailResult, List[Dict]]):
         payload = {status.value: value for status, value in statuses.items()}
 
         for i in range(self._retry_count + 1):

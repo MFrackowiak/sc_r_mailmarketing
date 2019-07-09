@@ -58,9 +58,9 @@ class FlypsGatewayClientTestCase(TestCase):
                         "message_id": "<4370c0c4-c52f-42a0-9087-b73fd4ce149f@example.flypsdm.io>",
                     },
                 ],
-                EmailResult.FAILURE: [133],
-                EmailResult.RECOVERABLE_FAILURE: [136],
-                EmailResult.AUTH_FAILURE: [134],
+                EmailResult.FAILURE: [{"id": 133, "message_id": ""}],
+                EmailResult.RECOVERABLE_FAILURE: [{"id": 136, "message_id": ""}],
+                EmailResult.AUTH_FAILURE: [{"id": 134, "message_id": ""}],
             },
         )
         self.assertEqual(

@@ -1,5 +1,7 @@
+import logging
 import os
 from json import load
+from re import findall
 
 from aiohttp import ClientSession
 from aiopg.sa import create_engine
@@ -41,6 +43,9 @@ async def init_db(config_file: str, force_init_db=False):
     with open(config_file) as dbconfig:
         config = load(dbconfig)
 
+    with open(config["sql"]) as sql_file:
+        init_sql = sql_file.read()
+
     engine = await create_engine(
         user=config["user"],
         database=config["name"],
@@ -48,7 +53,20 @@ async def init_db(config_file: str, force_init_db=False):
         password=config["password"],
     )
 
-    if force_init_db:
+    required_tables = set(findall(r"CREATE TABLE ([\w_]+) \(", init_sql))
+
+    async with engine.acquire() as conn:
+        query = """
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_type = 'BASE TABLE'
+            AND table_schema = 'public'
+            AND table_catalog = %s
+        """
+        tables = await conn.execute(query, config["name"])
+        all_tables = set(table["table_name"] for table in await tables.fetchall())
+    logging.error(f"{all_tables}, {required_tables}")
+    if force_init_db or all_tables != required_tables:
         with open(config["sql"]) as sql_file:
             init_sql = sql_file.read()
 
@@ -158,7 +176,7 @@ def make_app(
                 r"/campaigns.*",
                 create_campaign_app(template_loader, email_service, contact_service),
             ),
-            (r"/job", JobStatusHandler, {"email_service": email_service}),
+            (r"/api/v1/job", JobStatusHandler, {"email_service": email_service}),
         ]
     )
 

@@ -1,6 +1,7 @@
 [run]
 omit =
-    tests/
+    mock/*
+    mock.py
 
 [report]
 exclude_lines =

@@ -6,5 +6,5 @@ from common.enums import EmailResult
 
 class AbstractWebClient(ABC):
     @abstractmethod
-    async def report_job_status(self, statuses: Dict[EmailResult, List[int]]):
+    async def report_job_status(self, statuses: Dict[EmailResult, List[Dict]]):
         pass

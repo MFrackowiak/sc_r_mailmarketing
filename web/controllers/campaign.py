@@ -54,7 +54,9 @@ class CampaignHandler(BaseCampaignRequestHandler):
         campaign = await self.email_service.get_email_request_details(int(campaign_id))
         self.write(
             self.loader.load("campaigns/campaign.html").generate(
-                campaign=campaign["request"], jobs=campaign["jobs"], labels=LABEL_MAPPING,
+                campaign=campaign["request"],
+                jobs=campaign["jobs"],
+                labels=LABEL_MAPPING,
             )
         )
 

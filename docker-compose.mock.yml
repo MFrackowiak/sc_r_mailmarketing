@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:9.6.14-alpine
+    environment:
+      POSTGRES_PASSWORD: 'Test1234'
+      POSTGRES_DB: 'mail_marketing'
+      POSTGRES_USER: 'user'
+
+  redis:
+    image: redis:5.0.5-alpine
+
+  mock:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile.local
+    expose:
+      - 5004
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "3"
+    command: python mock.py
+    volumes:
+      - .:/app
+
+  email_client:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile.local
+    expose:
+      - 5000
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "3"
+    command: python email_client.py
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    environment:
+      SCMM_EMAIL_CONFIG: 'config/dev-email-config.json'
+
+  web:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile.local
+    expose:
+      - 5000
+    ports:
+      - "5050:5000"
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "3"
+    command: python web.py
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      SCMM_APP_CONFIG: 'config/dev-web-config.json'
+      SCMM_DB_CONFIG: 'config/dev-database-test.json'

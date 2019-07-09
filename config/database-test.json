@@ -1,0 +1,7 @@
+{
+  "user": "surge",
+  "name": "testdb",
+  "host": "localhost",
+  "password": "surge",
+  "sql": "scripts/db.sql"
+}
