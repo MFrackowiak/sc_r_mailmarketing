@@ -1,0 +1,47 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+  <h1>Contact details</h1>
+  <div class="ui relaxed divided list">
+    <div class="item">
+      <div class="content">
+        <div class="header">Name</div>
+        <div class="description">{{ contact['name'] }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <div class="header">Email</div>
+        <div class="description">{{ contact['email'] }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <div class="header">First name</div>
+        <div class="description">{{ contact['first_name'] }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <div class="header">Last name</div>
+        <div class="description">{{ contact['last_name'] }}</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <div class="header">Segments</div>
+        <div class="description">
+          {% for segment in contact['segments'] %}
+            <a class="ui label" href="/segments/{{ segment['id'] }}">{{ segment['name'] }}</a>
+          {% end %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="/contacts/{{ contact['id'] }}/edit" class="ui basic blue button">
+    Edit
+  </a>
+  <a href="/contacts/{{ contact['id'] }}/segments" class="ui basic teal button">
+    Add segment
+  </a>
+{% end %}

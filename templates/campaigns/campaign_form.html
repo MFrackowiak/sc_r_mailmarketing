@@ -1,0 +1,39 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+<form class="ui form" method="post" action="{{ action }}">
+  <div class="field">
+    <label>Name (and email subject):</label>
+    <input type="text" name="subject" placeholder="Campaign name">
+  </div>
+  <div class="field">
+    <label>Segment</label>
+    <div class="ui selection dropdown">
+      <input type="hidden" name="segment_id">
+      <i class="dropdown icon"></i>
+      <div class="default text">Segment</div>
+      <div class="menu">
+        {% for segment in segments %}
+        <div class="item" data-value="{{ segment['id'] }}">{{ segment['name'] }}</div>
+        {% end %}
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label>Template</label>
+    <div class="ui selection dropdown">
+      <input type="hidden" name="template_id">
+      <i class="dropdown icon"></i>
+      <div class="default text">Template</div>
+      <div class="menu">
+        {% for template in templates %}
+        <div class="item" data-value="{{ template['id'] }}">{{ template['name'] }}</div>
+        {% end %}
+      </div>
+    </div>
+  </div>
+  <button class="ui basic green button">
+    Save
+  </button>
+</form>
+{% end %}

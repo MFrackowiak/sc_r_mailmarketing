@@ -1,0 +1,10 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+  {% include "../include/table.html" %}
+  {% include "../include/pagination.html" %}
+  <a href="/contacts/add" class="ui green button">
+    <i class="ui plus icon"></i>
+    Add contact
+  </a>
+{% end %}

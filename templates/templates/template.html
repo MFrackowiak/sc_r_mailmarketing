@@ -1,0 +1,26 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+<h1>Template details</h1>
+<div class="ui relaxed divided list">
+  <div class="item">
+    <div class="content">
+      <div class="header">Name</div>
+      <div class="description">{{ template['name'] }}</div>
+    </div>
+  </div>
+  <div class="item">
+    <div class="content">
+      <div class="header">Template</div>
+      <div class="description">
+        <div class="ui raised segment">
+          <p style="white-space: pre-line;">{{ template['template'] }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<a href="/templates/{{ template['id'] }}/edit" class="ui basic blue button">
+  Edit
+</a>
+{% end %}

@@ -1,0 +1,17 @@
+{% extends "../base.html" %}
+
+{% block body_content %}
+  <form class="ui form" method="post" action="{{ action }}">
+    <div class="field">
+      <label>Template name</label>
+      <input type="text" name="name" placeholder="Segment name" value="{{ initial.get('name', '') }}">
+    </div>
+    <div class="field">
+      <label>Template</label>
+      <textarea name="template" placeholder="Template" >{{ initial.get('template', '') }}</textarea>
+    </div>
+    <button class="ui basic green button">
+      Save
+    </button>
+  </form>
+{% end %}

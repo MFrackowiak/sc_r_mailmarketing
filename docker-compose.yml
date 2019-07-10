@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  email_client:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    expose:
+      - 5000
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "3"
+    command: python email_client.py
+    volumes:
+      - .:/app
+    environment:
+      SCMM_EMAIL_CONFIG: 'config/email-config.json'
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    expose:
+      - 5000
+    ports:
+      - "5050:5000"
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "3"
+    command: python web.py
+    volumes:
+      - .:/app
+    environment:
+      SCMM_APP_CONFIG: 'config/web-config.json'
+      SCMM_DB_CONFIG: 'config/database.json'
