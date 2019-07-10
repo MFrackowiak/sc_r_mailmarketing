@@ -1,3 +1,4 @@
+import logging
 from base64 import b64decode
 from http import HTTPStatus
 from itertools import cycle
@@ -25,9 +26,9 @@ statuses = cycle(
 
 class EmailRequestHandler(RequestHandler):
     def post(self):
-        print(escape.json_decode(self.request.body))
+        logging.error(escape.json_decode(self.request.body))
         auth_header = self.request.headers.get_list("Authorization")[0]
-        print(self._decode_auth(auth_header))
+        logging.error(self._decode_auth(auth_header))
         status = next(statuses)
         self.set_status(status)
 

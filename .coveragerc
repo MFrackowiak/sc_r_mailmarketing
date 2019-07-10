@@ -3,6 +3,9 @@ omit =
     mock/*
     mock.py
     tests/*
+    web.py
+    web/app.py
+    email_client/app.py
 
 [report]
 exclude_lines =

@@ -85,9 +85,7 @@ class ContactSegmentFormHandler(BaseContactRequestHandler):
     @handle_errors
     async def get(self, contact_id: str):
         action = f"/contacts/{contact_id}/segments"
-        segments = await self.service.read_segments(
-            0, DEFAULT_PER_PAGE
-        )  # TODO all contact can join
+        segments = await self.service.read_segments(1, None)
 
         self.write(
             self.loader.load("contacts/contact_segment_form.html").generate(

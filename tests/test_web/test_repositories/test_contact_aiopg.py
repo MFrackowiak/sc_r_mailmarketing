@@ -230,6 +230,25 @@ class AioPGContactRepositoryTestCase(AioPGBaseTestCase):
 
         self.assertEqual([], third_page)
 
+    async def test_read_segments_no_pagination(self):
+        await self.connection.execute(
+            """
+            INSERT INTO segment (id, name)
+            VALUES (1, 'test-seg'), (2, 'beta'), (3, 'alpha')
+            """
+        )
+
+        first_page = await self.repository.read_segments(0, None)
+
+        self.assertEqual(
+            [
+                {"id": 1, "name": "test-seg"},
+                {"id": 2, "name": "beta"},
+                {"id": 3, "name": "alpha"},
+            ],
+            first_page,
+        )
+
     async def test_update_segment(self):
         await self.connection.execute(
             """

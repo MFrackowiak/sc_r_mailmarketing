@@ -1,4 +1,3 @@
-import logging
 import os
 from json import load
 from re import findall
@@ -66,7 +65,7 @@ async def init_db(config_file: str, force_init_db=False):
         """
         tables = await conn.execute(query, config["name"])
         all_tables = set(table["table_name"] for table in await tables.fetchall())
-    logging.error(f"{all_tables}, {required_tables}")
+
     if force_init_db or all_tables != required_tables:
         with open(config["sql"]) as sql_file:
             init_sql = sql_file.read()

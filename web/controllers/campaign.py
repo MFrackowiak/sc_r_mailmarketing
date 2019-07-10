@@ -66,7 +66,7 @@ class CampaignFormHandler(BaseCampaignRequestHandler):
     async def get(self):
         action = "/campaigns"
         templates = await self.email_service.list_email_templates()
-        segments = await self.contact_service.read_segments(0, 100)
+        segments = await self.contact_service.read_segments(1, None)
 
         self.write(
             self.loader.load("campaigns/campaign_form.html").generate(

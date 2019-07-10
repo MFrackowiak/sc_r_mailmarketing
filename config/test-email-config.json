@@ -16,7 +16,8 @@
       "timeout": {"total": 10}
     },
     "email": {
-      "timeout": {"total": 10}
+      "timeout": {"total": 10},
+      "max_connections": 20
     }
   },
   "redis": {

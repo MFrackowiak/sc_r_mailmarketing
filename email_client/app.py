@@ -30,14 +30,14 @@ async def initialize_redis_pool(redis_config: Dict):
 
 
 def initialize_web_session(web_session_config: Dict) -> ClientSession:
-    return ClientSession(
-        timeout=ClientTimeout(**web_session_config["timeout"]),
-        connector=TCPConnector(limit=web_session_config["max_connections"]),
-    )
+    return ClientSession(timeout=ClientTimeout(**web_session_config["timeout"]))
 
 
 def initialize_email_gateway_session(email_session_config: Dict) -> ClientSession:
-    return ClientSession(timeout=ClientTimeout(**email_session_config["timeout"]))
+    return ClientSession(
+        timeout=ClientTimeout(**email_session_config["timeout"]),
+        connector=TCPConnector(limit=email_session_config["max_connections"]),
+    )
 
 
 async def initialize_services(config: Dict):

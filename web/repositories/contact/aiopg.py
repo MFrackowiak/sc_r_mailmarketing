@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Optional
 
 from aiopg.sa import Engine
 from sqlalchemy import select, join, and_, func
@@ -82,11 +82,14 @@ class SimplePostgresContactRepository(AbstractContactRepository):
             )
             return dict(await segment.fetchone())
 
-    async def read_segments(self, page: int, per_page: int) -> List[Dict]:
+    async def read_segments(self, page: int, per_page: Optional[int]) -> List[Dict]:
         async with self._db_engine.acquire() as conn:
-            segments = await conn.execute(
-                segment_table.select().offset(per_page * page).limit(per_page)
-            )
+            query = segment_table.select()
+
+            if per_page is not None:
+                query = query.offset(per_page * page).limit(per_page)
+
+            segments = await conn.execute(query)
             return [dict(segment) for segment in await segments.fetchall()]
 
     async def update_segment(self, segment: Dict):

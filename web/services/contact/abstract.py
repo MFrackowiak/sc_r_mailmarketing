@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 
 class AbstractContactService(ABC):
@@ -32,7 +32,7 @@ class AbstractContactService(ABC):
         pass
 
     @abstractmethod
-    async def read_segments(self, page: int, per_page: int) -> List[Dict]:
+    async def read_segments(self, page: int, per_page: Optional[int]) -> List[Dict]:
         pass
 
     @abstractmethod
