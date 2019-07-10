@@ -1,3 +1,4 @@
+from math import ceil
 from typing import Dict, List
 
 from web.repositories.contact.abstract import AbstractContactRepository
@@ -20,9 +21,8 @@ class ContactService(AbstractContactService):
         return contact
 
     async def read_contacts(self, page: int, per_page: int) -> List[Dict]:
-        if page < 0:
-            page = 0
-
+        # in db we use pages from 0, in the view from 1
+        page -= 1
         return await self._contact_repository.read_contacts(page, per_page)
 
     async def update_contact(self, contact: Dict):
@@ -38,6 +38,8 @@ class ContactService(AbstractContactService):
         return await self._contact_repository.get_segment(segment_id)
 
     async def read_segments(self, page: int, per_page: int) -> List[Dict]:
+        # in db we use pages from 0, in the view from 1
+        page -= 1
         return await self._contact_repository.read_segments(page, per_page)
 
     async def update_segment(self, segment: Dict):
@@ -56,3 +58,9 @@ class ContactService(AbstractContactService):
         await self._contact_repository.remove_contact_from_segment(
             segment_id, contact_id
         )
+
+    async def get_contacts_pages_count(self, per_page: int) -> int:
+        return int(ceil(await self._contact_repository.get_contacts_count() / per_page))
+
+    async def get_segments_pages_count(self, per_page: int) -> int:
+        return int(ceil(await self._contact_repository.get_segments_count() / per_page))

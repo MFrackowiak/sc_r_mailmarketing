@@ -3,6 +3,7 @@ from typing import Optional
 from tornado.template import Loader
 
 from web.controllers.utils.errors import handle_errors
+from web.controllers.utils.pagination import create_pagination_context
 from web.controllers.utils.validated import ValidatedFormRequestHandler
 from web.schemas import contact_schema, segment_contact_join_schema
 from web.services.contact.abstract import AbstractContactService
@@ -23,11 +24,18 @@ class ContactsHandler(BaseContactRequestHandler):
 
     @handle_errors
     async def get(self):
-        page = self.get_query_argument("page", "0")
-        contacts = await self.service.read_contacts(int(page), DEFAULT_PER_PAGE)
+        page = self._get_page()
+        contacts = await self.service.read_contacts(page, DEFAULT_PER_PAGE)
+        pages = await self.service.get_contacts_pages_count(DEFAULT_PER_PAGE)
+
+        pagination_context = create_pagination_context(page, pages)
+
         self.write(
             self.loader.load("contacts/contacts.html").generate(
-                objects=contacts, columns=["id", "name", "email"], url_base="/contacts/"
+                objects=contacts,
+                columns=["id", "name", "email"],
+                url_base="/contacts/",
+                pages=pagination_context,
             )
         )
 

@@ -343,3 +343,33 @@ class AioPGContactRepositoryTestCase(AioPGBaseTestCase):
         )
 
         self.assertEqual([(1, 1)], await result.fetchall())
+
+    async def test_get_contacts_count(self):
+        await self.connection.execute(
+            """
+            INSERT INTO contact (id, name, first_name, last_name, email)
+            VALUES
+            (1, 'User1', 'Janusz', 'Kowalski', 'jk1@co.co'),
+            (2, 'User2', 'Janusz', 'Kowalski', 'jk2@co.co'),
+            (3, 'User3', 'Janusz', 'Kowalski', 'jk3@co.co'),
+            (4, 'User4', 'Janusz', 'Kowalski', 'jk4@co.co'),
+            (5, 'User5', 'Janusz', 'Kowalski', 'jk5@co.co')
+            """
+        )
+
+        self.assertEqual(5, await self.repository.get_contacts_count())
+
+    async def test_get_segments_count(self):
+        await self.connection.execute(
+            """
+            INSERT INTO segment (id, name)
+            VALUES
+            (1, 'Segment1'),
+            (2, 'Segment2'),
+            (3, 'Segment3'),
+            (4, 'Segment4'),
+            (5, 'Segment5')
+            """
+        )
+
+        self.assertEqual(5, await self.repository.get_segments_count())

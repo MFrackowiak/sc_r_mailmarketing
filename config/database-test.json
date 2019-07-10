@@ -1,7 +1,8 @@
 {
   "user": "surge",
   "name": "testdb",
-  "host": "localhost",
+  "host": "testpostgres",
+  "port": 5432,
   "password": "surge",
   "sql": "scripts/db.sql"
 }

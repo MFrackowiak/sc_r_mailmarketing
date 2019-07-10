@@ -60,7 +60,7 @@ class FlypsGatewayClient(AbstractEmailGatewayClient):
         headers: Dict,
     ) -> Tuple[EmailResult, Optional[str]]:
         try:
-            auth = BasicAuth(*auth)
+            auth = BasicAuth(*auth, encoding="UTF-8")
         except (ValueError, TypeError):
             return EmailResult.AUTH_FAILURE, None
 
@@ -77,7 +77,7 @@ class FlypsGatewayClient(AbstractEmailGatewayClient):
                     "text": self.render_template(job, template),
                     "headers": headers,
                 },
-                auth=BasicAuth(*auth),
+                auth=auth,
             )
             if response.status == 202:
                 response_json = await response.json()

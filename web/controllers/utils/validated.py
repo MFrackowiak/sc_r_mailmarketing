@@ -19,3 +19,11 @@ class ValidatedFormRequestHandler(RequestHandler):
             return None
 
         return schema(data)
+
+    def _get_page(self) -> int:
+        page = int(self.get_query_argument("page", "1"))
+
+        if page < 1:
+            page = 1
+
+        return page

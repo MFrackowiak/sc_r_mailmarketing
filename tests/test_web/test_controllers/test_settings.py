@@ -76,10 +76,7 @@ class TestSettingsHandlers(BaseHandlerTest):
             },
         )
 
-        response = self.fetch(
-            "/settings",
-            method="GET",
-        )
+        response = self.fetch("/settings", method="GET")
 
         self.assertEqual(response.code, 200)
         self.settings_service.get_current_settings.assert_awaited_once()
@@ -92,12 +89,12 @@ class TestSettingsHandlers(BaseHandlerTest):
         )
 
     def test_get_error(self):
-        self.settings_service.get_current_settings.return_value = False, "Connection timeout"
-
-        response = self.fetch(
-            "/settings",
-            method="GET",
+        self.settings_service.get_current_settings.return_value = (
+            False,
+            "Connection timeout",
         )
+
+        response = self.fetch("/settings", method="GET")
 
         self.assertEqual(response.code, 500)
         self.template_loader.load.assert_called_once_with("error.html")

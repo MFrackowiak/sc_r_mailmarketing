@@ -1,6 +1,7 @@
+import traceback
 from asyncio import get_event_loop, sleep
 
-from asynctest import TestCase, logging
+from asynctest import TestCase, logging, SkipTest
 
 from web.app import init_db
 from web.repositories.contact.aiopg import SimplePostgresContactRepository
@@ -31,15 +32,23 @@ class AioPGBaseTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        logging.basicConfig(level=logging.DEBUG)
-
-        cls.engine = cls.loop.run_until_complete(
-            init_db("config/database-test.json", force_init_db=True)
-        )
-        cls.connection = cls.loop.run_until_complete(cls.engine.acquire())
-        super().setUpClass()
+        try:
+            cls.engine = cls.loop.run_until_complete(
+                init_db("config/database-test.json", force_init_db=True)
+            )
+        except Exception:
+            logging.error(
+                f"Could not set up database, aborting aiopg tests. Error: {traceback.format_exc()}"
+            )
+            cls.engine = None
+            cls.connection = None
+        else:
+            cls.connection = cls.loop.run_until_complete(cls.engine.acquire())
+            super().setUpClass()
 
     async def setUp(self):
+        if not self.engine:
+            raise SkipTest("PostgresDB not available or configured.")
         self.transaction = await self.connection.begin()
 
         self.db_engine_mock = DBEngineMock(self.connection)
@@ -50,6 +59,7 @@ class AioPGBaseTestCase(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.connection.close()
-        cls.engine.close()
+        if cls.connection:
+            cls.connection.close()
+            cls.engine.close()
         super().tearDownClass()

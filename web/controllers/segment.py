@@ -3,6 +3,7 @@ from typing import Optional
 from tornado.template import Loader
 
 from web.controllers.utils.errors import handle_errors
+from web.controllers.utils.pagination import create_pagination_context
 from web.controllers.utils.validated import ValidatedFormRequestHandler
 from web.schemas import segment_schema
 from web.services.contact.abstract import AbstractContactService
@@ -23,11 +24,18 @@ class SegmentsHandler(BaseSegmentRequestHandler):
 
     @handle_errors
     async def get(self):
-        page = self.get_query_argument("page", "0")
+        page = self._get_page()
         contacts = await self.service.read_segments(int(page), DEFAULT_PER_PAGE)
+        pages = await self.service.get_segments_pages_count(DEFAULT_PER_PAGE)
+
+        pagination_context = create_pagination_context(page, pages)
+
         self.write(
             self.loader.load("segments/segments.html").generate(
-                objects=contacts, columns=["id", "name"], url_base="/segments/"
+                objects=contacts,
+                columns=["id", "name"],
+                url_base="/segments/",
+                pages=pagination_context,
             )
         )
 

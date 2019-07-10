@@ -238,7 +238,12 @@ class SendEmailServiceTestCase(TestCase):
         sleep_mock.assert_not_awaited()
         send_emails_mock.assert_not_awaited()
         self.web_client.report_job_status.assert_awaited_once_with(
-            {EmailResult.FAILURE: [{"id": 3, "message_id": ""}, {"id": 4, "message_id": ""}]}
+            {
+                EmailResult.FAILURE: [
+                    {"id": 3, "message_id": ""},
+                    {"id": 4, "message_id": ""},
+                ]
+            }
         )
 
     async def test_send_email_batch(self):

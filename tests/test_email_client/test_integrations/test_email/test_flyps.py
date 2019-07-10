@@ -107,7 +107,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=BasicAuth("user", "admin1"),
+            auth=BasicAuth("user", "admin1", encoding="UTF-8"),
         )
 
     async def test_send_email_400(self):
@@ -137,7 +137,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=BasicAuth("user", "admin1"),
+            auth=BasicAuth("user", "admin1", encoding="UTF-8"),
         )
 
     async def test_send_email_401(self):
@@ -167,7 +167,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=BasicAuth("user", "admin1"),
+            auth=BasicAuth("user", "admin1", encoding="UTF-8"),
         )
 
     async def test_send_email_500(self):
@@ -197,7 +197,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=BasicAuth("user", "admin1"),
+            auth=BasicAuth("user", "admin1", encoding="UTF-8"),
         )
 
     @patch("email_client.integrations.email.flyps.logger")
@@ -229,7 +229,7 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=BasicAuth("user", "admin1"),
+            auth=BasicAuth("user", "admin1", encoding="UTF-8"),
         )
 
     @patch("email_client.integrations.email.flyps.logger")
@@ -261,5 +261,5 @@ class FlypsGatewayClientTestCase(TestCase):
                 "text": "Hello User! Welcome in our subscription.",
                 "headers": {},
             },
-            auth=BasicAuth("user", "admin1"),
+            auth=BasicAuth("user", "admin1", encoding="UTF-8"),
         )

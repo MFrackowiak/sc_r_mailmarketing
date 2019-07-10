@@ -14,7 +14,7 @@ services:
   mock:
     build:
       context: .
-      dockerfile: deployment/Dockerfile.local
+      dockerfile: Dockerfile.local
     expose:
       - 5004
     logging:
@@ -28,7 +28,7 @@ services:
   email_client:
     build:
       context: .
-      dockerfile: deployment/Dockerfile.local
+      dockerfile: Dockerfile.local
     expose:
       - 5000
     logging:
@@ -46,7 +46,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: deployment/Dockerfile.local
+      dockerfile: Dockerfile.local
     expose:
       - 5000
     ports:

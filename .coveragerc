@@ -2,6 +2,7 @@
 omit =
     mock/*
     mock.py
+    tests/*
 
 [report]
 exclude_lines =

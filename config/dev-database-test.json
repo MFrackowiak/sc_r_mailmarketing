@@ -1,0 +1,8 @@
+{
+  "user": "user",
+  "name": "mail_marketing",
+  "host": "db",
+  "port": 5432,
+  "password": "Test1234",
+  "sql": "scripts/db.sql"
+}

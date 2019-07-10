@@ -15,4 +15,4 @@ RUN apk add --no-cache --virtual .build-deps \
     && apk del --no-cache .build-deps
 
 RUN apk --no-cache add libpq
-COPY . /app
+COPY deployment /app

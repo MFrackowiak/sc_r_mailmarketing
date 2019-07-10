@@ -3,7 +3,7 @@ from asyncio import get_event_loop
 from json import load
 from typing import Dict
 
-from aiohttp import ClientSession, ClientTimeout
+from aiohttp import ClientSession, ClientTimeout, TCPConnector
 from aioredis import create_redis_pool
 from tornado.web import Application
 
@@ -30,7 +30,10 @@ async def initialize_redis_pool(redis_config: Dict):
 
 
 def initialize_web_session(web_session_config: Dict) -> ClientSession:
-    return ClientSession(timeout=ClientTimeout(**web_session_config["timeout"]))
+    return ClientSession(
+        timeout=ClientTimeout(**web_session_config["timeout"]),
+        connector=TCPConnector(limit=web_session_config["max_connections"]),
+    )
 
 
 def initialize_email_gateway_session(email_session_config: Dict) -> ClientSession:

@@ -18,6 +18,10 @@ class AbstractContactRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_contacts_count(self) -> int:
+        pass
+
+    @abstractmethod
     async def update_contact(self, contact: Dict):
         pass
 
@@ -35,6 +39,10 @@ class AbstractContactRepository(ABC):
 
     @abstractmethod
     async def read_segments(self, page: int, per_page: int) -> List[Dict]:
+        pass
+
+    @abstractmethod
+    async def get_segments_count(self) -> int:
         pass
 
     @abstractmethod

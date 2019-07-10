@@ -1,7 +1,7 @@
 from typing import List, Tuple, Dict
 
 from aiopg.sa import Engine
-from sqlalchemy import select, join, and_
+from sqlalchemy import select, join, and_, func
 
 from web.repositories.contact.abstract import AbstractContactRepository
 from web.repositories.sqlalchemy.tables import (
@@ -142,3 +142,17 @@ class SimplePostgresContactRepository(AbstractContactRepository):
                     )
                 )
             )
+
+    async def get_contacts_count(self) -> int:
+        async with self._db_engine.acquire() as conn:
+            result = await conn.execute(
+                select([func.count()]).select_from(contact_table)
+            )
+            return await result.scalar()
+
+    async def get_segments_count(self) -> int:
+        async with self._db_engine.acquire() as conn:
+            result = await conn.execute(
+                select([func.count()]).select_from(segment_table)
+            )
+            return await result.scalar()

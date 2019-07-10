@@ -54,3 +54,11 @@ class AbstractContactService(ABC):
     @abstractmethod
     async def remove_contact_from_segment(self, segment_id: int, contact_id: int):
         pass
+
+    @abstractmethod
+    async def get_contacts_pages_count(self, per_page: int) -> int:
+        pass
+
+    @abstractmethod
+    async def get_segments_pages_count(self, per_page: int) -> int:
+        pass

@@ -50,6 +50,7 @@ async def init_db(config_file: str, force_init_db=False):
         user=config["user"],
         database=config["name"],
         host=config["host"],
+        port=config["port"],
         password=config["password"],
     )
 

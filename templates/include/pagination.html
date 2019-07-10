@@ -1,0 +1,39 @@
+{% if pages %}
+<div>
+  <div class="ui right floated buttons">
+    {% if pages['first'] %}
+      <a class="ui basic button" href="?page=1">
+        <i class="ui icon angle double left"></i>
+      </a>
+    {% end %}
+    {% if pages['prev'] %}
+      <a class="ui basic button" href="?page={{ pages['prev'][0] }}">
+        <i class="ui icon angle left"></i>
+      </a>
+      {% for page in pages['prev'] %}
+        <a class="ui basic button" href="?page={{ page }}">
+          {{ page }}
+        </a>
+      {% end %}
+    {% end %}
+    <div class="ui button">
+      {{ pages['current'] }}
+    </div>
+    {% if pages['next'] %}}
+      {% for page in pages['next'] %}
+        <a class="ui basic button" href="?page={{ page }}">
+          {{ page }}
+        </a>
+      {% end %}
+      <a class="ui basic button" href="?page={{ pages['next'][0] }}">
+        <i class="ui icon angle right"></i>
+      </a>
+    {% end %}}
+    {% if pages['last'] %}
+    <a class="ui basic button" href="?page={{ pages['total'] }}">
+      <i class="ui icon angle double right"></i>
+    </a>
+    {% end %}
+  </div>
+</div>
+{% end %}
